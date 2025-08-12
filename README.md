@@ -7,16 +7,17 @@
 
 [![R-CMD-check](https://github.com/lkhenayfis/dbinterface/workflows/R-CMD-check/badge.svg)](https://github.com/lkhenayfis/dbinterface/actions)
 [![test-coverage](https://github.com/lkhenayfis/dbinterface/workflows/test-coverage/badge.svg)](https://github.com/lkhenayfis/dbinterface/actions)
-[![codecov](https://codecov.io/gh/lkhenayfis/dbinterface/graph/badge.svg?token=2E8YI878Y4)](https://codecov.io/gh/lkhenayfis/dbinterface)
+[![codecov](https://codecov.io/gh/lkhenayfis/dbinterface/graph/badge.svg?token=YSVTGHRU3G)](https://codecov.io/gh/lkhenayfis/dbinterface)
 <!-- badges: end -->
 
 ## Visao geral
 
 Este pacote fornece funcionalidade backend para interface com bancos
-localizados em um diretorio local ou em um bucket S3. A versao atual
-suporta particionamento de dados, porem apenas operacoes de leitura
-estao implementadas. Criacao de novas tabelas e escrita nas existentes
-serao adicionadas em versoes futuras.
+`mock` localizados em um diretorio local ou em um bucket S3, alem de
+bancos relacionais tradicionais. A versao atual suporta particionamento
+de dados, porem apenas operacoes de leitura estao implementadas. Criacao
+de novas tabelas e escrita nas existentes serao adicionadas em versoes
+futuras.
 
 ## Instalacao
 
@@ -82,8 +83,12 @@ funcao `getfromdb`
 ``` r
 # lendo tabela completa
 dat <- getfromdb(conexao, tabela = "subbacias")
+#> Warning: Potentially unsafe or invalid elements have been discarded from R metadata.
+#> ℹ Type: "externalptr"
+#> → If you trust the source, you can set `options(arrow.unsafe_metadata = TRUE)` to preserve them.
 print(dat)
 #>     posto          nome     codigo bacia_smap fator posto_jusante         bacia
+#>     <int>        <char>     <char>     <char> <num>         <int>        <char>
 #>  1:    18 Agua Vermelha  AVERMELHA   GRD_PRNB 1.000            34        Grande
 #>  2:    24    Emborcacao EMBORCACAO   GRD_PRNB 1.000            31     Paranaiba
 #>  3:    33     Sao Simao    SSIMAO2   GRD_PRNB 0.891            34     Paranaiba
@@ -101,42 +106,44 @@ print(dat)
 #> 15:   285         Jirau     JIRAU2      Norte 1.000           287       Madeira
 #> 16:   288      Pimental  PIMENTALT      Norte 1.000             0         Xingu
 #> 17:   290          Jari STOANTJARI      Norte 1.000             0          Jari
-#>     posto_jusante_gvp_art posto_gvp_artificial     tv n c1 c2 c3   latitude
-#>  1:                    34                   18  18.00 0  0  0  0 -19.867222
-#>  2:                    31                   24  17.00 0  0  0  0 -18.451944
-#>  3:                    34                   33  30.00 0  0  0  0 -19.018055
-#>  4:                    62                   61   9.30 0  0  0  0 -22.657500
-#>  5:                     0                   81   0.00 0  0  0  0 -25.503330
-#>  6:                    94                   92  20.93 0  0  0  0 -27.267500
-#>  7:                   112                  111   1.30 0  0  0  0 -29.016944
-#>  8:                   169                  156 360.00 0  0  0  0 -18.212500
-#>  9:                   229                  228 132.00 0  0  0  0 -10.984805
-#> 10:                    38                   37  12.00 0  0  0  0 -22.505000
-#> 11:                     0                   66   0.00 0  0  0  0 -25.426667
-#> 12:                   191                  270  10.00 0  0  0  0 -13.826187
-#> 13:                     0                  275   0.00 0  0  0  0  -3.750806
-#> 14:                     0                  278   0.00 0  0  0  0 -14.875085
-#> 15:                   287                  285  23.00 0  0  0  0  -9.266667
-#> 16:                     0                  288   0.00 0  0  0  0  -3.438302
-#> 17:                     0                  290   0.00 0  0  0  0  -0.650000
-#>     longitude
-#>  1: -50.35000
-#>  2: -47.99389
-#>  3: -50.49917
-#>  4: -51.36083
-#>  5: -53.67167
-#>  6: -52.39833
-#>  7: -53.18889
-#>  8: -45.25917
-#>  9: -55.76600
-#> 10: -48.54500
-#> 11: -54.59278
-#> 12: -48.30083
-#> 13: -49.66750
-#> 14: -55.78838
-#> 15: -64.65319
-#> 16: -51.94512
-#> 17: -52.51667
+#>     posto_jusante_gvp_art posto_gvp_artificial     tv     n    c1    c2    c3
+#>                     <int>                <int>  <num> <int> <num> <num> <num>
+#>  1:                    34                   18  18.00     0     0     0     0
+#>  2:                    31                   24  17.00     0     0     0     0
+#>  3:                    34                   33  30.00     0     0     0     0
+#>  4:                    62                   61   9.30     0     0     0     0
+#>  5:                     0                   81   0.00     0     0     0     0
+#>  6:                    94                   92  20.93     0     0     0     0
+#>  7:                   112                  111   1.30     0     0     0     0
+#>  8:                   169                  156 360.00     0     0     0     0
+#>  9:                   229                  228 132.00     0     0     0     0
+#> 10:                    38                   37  12.00     0     0     0     0
+#> 11:                     0                   66   0.00     0     0     0     0
+#> 12:                   191                  270  10.00     0     0     0     0
+#> 13:                     0                  275   0.00     0     0     0     0
+#> 14:                     0                  278   0.00     0     0     0     0
+#> 15:                   287                  285  23.00     0     0     0     0
+#> 16:                     0                  288   0.00     0     0     0     0
+#> 17:                     0                  290   0.00     0     0     0     0
+#>       latitude longitude
+#>          <num>     <num>
+#>  1: -19.867222 -50.35000
+#>  2: -18.451944 -47.99389
+#>  3: -19.018055 -50.49917
+#>  4: -22.657500 -51.36083
+#>  5: -25.503330 -53.67167
+#>  6: -27.267500 -52.39833
+#>  7: -29.016944 -53.18889
+#>  8: -18.212500 -45.25917
+#>  9: -10.984805 -55.76600
+#> 10: -22.505000 -48.54500
+#> 11: -25.426667 -54.59278
+#> 12: -13.826187 -48.30083
+#> 13:  -3.750806 -49.66750
+#> 14: -14.875085 -55.78838
+#> 15:  -9.266667 -64.65319
+#> 16:  -3.438302 -51.94512
+#> 17:  -0.650000 -52.51667
 ```
 
 Subsets podem ser especificados no momento da leitura atraves de
@@ -144,11 +151,32 @@ argumentos opcionais nomeados homonimos das colunas na tabela
 
 ``` r
 dat <- getfromdb(conexao, tabela = "subbacias", codigo = c("AVERMELHA", "BAIXOIG"))
+#> Warning: Potentially unsafe or invalid elements have been discarded from R metadata.
+#> ℹ Type: "externalptr"
+#> → If you trust the source, you can set `options(arrow.unsafe_metadata = TRUE)` to preserve them.
+#> Potentially unsafe or invalid elements have been discarded from R metadata.
+#> ℹ Type: "externalptr"
+#> → If you trust the source, you can set `options(arrow.unsafe_metadata = TRUE)` to preserve them.
+#> Potentially unsafe or invalid elements have been discarded from R metadata.
+#> ℹ Type: "externalptr"
+#> → If you trust the source, you can set `options(arrow.unsafe_metadata = TRUE)` to preserve them.
+#> Potentially unsafe or invalid elements have been discarded from R metadata.
+#> ℹ Type: "externalptr"
+#> → If you trust the source, you can set `options(arrow.unsafe_metadata = TRUE)` to preserve them.
+#> Potentially unsafe or invalid elements have been discarded from R metadata.
+#> ℹ Type: "externalptr"
+#> → If you trust the source, you can set `options(arrow.unsafe_metadata = TRUE)` to preserve them.
 print(dat)
 #>    posto          nome    codigo bacia_smap fator posto_jusante  bacia
+#>    <int>        <char>    <char>     <char> <num>         <int> <char>
 #> 1:    18 Agua Vermelha AVERMELHA   GRD_PRNB 1.000            34 Grande
 #> 2:    81  Baixo Iguacu   BAIXOIG        SUL 0.204             0 Iguacu
-#>    posto_jusante_gvp_art posto_gvp_artificial tv n c1 c2 c3  latitude longitude
-#> 1:                    34                   18 18 0  0  0  0 -19.86722 -50.35000
-#> 2:                     0                   81  0 0  0  0  0 -25.50333 -53.67167
+#>    posto_jusante_gvp_art posto_gvp_artificial    tv     n    c1    c2    c3
+#>                    <int>                <int> <num> <int> <num> <num> <num>
+#> 1:                    34                   18    18     0     0     0     0
+#> 2:                     0                   81     0     0     0     0     0
+#>     latitude longitude
+#>        <num>     <num>
+#> 1: -19.86722 -50.35000
+#> 2: -25.50333 -53.67167
 ```
