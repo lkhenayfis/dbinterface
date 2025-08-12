@@ -1,11 +1,11 @@
 Package: dbinterface
 Title: Backend Para Acesso A Bancos De Dados `mock` E Relacionais
-Version: 0.8.1
+Version: 0.8.1.9000
 Authors@R: 
     person("Lucas", "Khenayfis", , "lucaskhenayfis@gmail.com", role = c("aut", "cre"))
-Description: Este pacote fornece funcionalidade backend para interface com bancos
-    localizados em um diretorio local ou em um bucket S3. A versao atual
-    suporta particionamento de dados, porem apenas operacoes de leitura
+Description: Este pacote fornece funcionalidade backend para interface com bancos `mock`
+    localizados em um diretorio local ou em um bucket S3, alem de bancos relacionais tradicionais.
+    A versao atual suporta particionamento de dados, porem apenas operacoes de leitura
     estao implementadas. Criacao de novas tabelas e escrita nas existentes
     serao adicionadas em versoes futuras.
 License: MIT + file LICENSE
