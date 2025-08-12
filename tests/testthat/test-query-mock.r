@@ -33,7 +33,7 @@ test_that("Testes de modificacao de query", {
 
 test_that("Leitura de dados mock -- Local", {
 
-    arq  <- system.file("extdata/cpart_parquet/schema.json", package = "dbrenovaveis")
+    arq  <- system.file("extdata/cpart_parquet/schema.json", package = "dbinterface")
     conn <- conectamock(arq)
 
     # checagem de particionamento ----------------------------------------

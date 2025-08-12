@@ -37,7 +37,7 @@ objeto descritivo de uma tabela
 Funcao para geracao de objetos representativos das tabelas em um determinado banco de dados
 }
 \details{
-Esta funcao faz parte do backend do pacote \code{dbrenovaveis}. Atraves dela e possivel
+Esta funcao faz parte do backend do pacote \code{dbinterface}. Atraves dela e possivel
 especificar a estrutura de qualquer tabela regular, definindo seus campos e correspondentes
 tipos, particoes e outros atributos.
 
@@ -50,26 +50,26 @@ causar time-out da conexao.
 
 # contruindo uma tabela nao particionada a partir do dado exemplo do pacote
 # utilizando um pequeno subset de suas colunas para simplificar o exemplo
-tab <- dbrenovaveis:::new_tabela(
+tab <- dbinterface:::new_tabela(
     nome = "subbacias",
     campos = list(
-        dbrenovaveis:::new_campo("posto", "int"),
-        dbrenovaveis:::new_campo("nome", "string"),
-        dbrenovaveis:::new_campo("codigo", "string")
+        dbinterface:::new_campo("posto", "int"),
+        dbinterface:::new_campo("nome", "string"),
+        dbinterface:::new_campo("codigo", "string")
     ),
-    uri = system.file("extdata/cpart_parquet/subbacias/", package = "dbrenovaveis"),
+    uri = system.file("extdata/cpart_parquet/subbacias/", package = "dbinterface"),
     tipo_arquivo = ".parquet.gzip"
 )
 
 # construindo uma tabela particionada
-tab <- dbrenovaveis:::new_tabela(
+tab <- dbinterface:::new_tabela(
     nome = "vazoes",
     campos = list(
-        dbrenovaveis:::new_campo("data", "date"),
-        dbrenovaveis:::new_campo("codigo", "string"),
-        dbrenovaveis:::new_campo("vazao", "float")
+        dbinterface:::new_campo("data", "date"),
+        dbinterface:::new_campo("codigo", "string"),
+        dbinterface:::new_campo("vazao", "float")
     ),
-    uri = system.file("extdata/cpart_parquet/vazoes/", package = "dbrenovaveis"),
+    uri = system.file("extdata/cpart_parquet/vazoes/", package = "dbinterface"),
     particoes = c("codigo"),
     tipo_arquivo = ".parquet.gzip",
     descricao = "Dados de entrada de vazao observada"

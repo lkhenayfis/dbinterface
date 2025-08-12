@@ -1,12 +1,12 @@
 
 test_that("Testa conexao mock -- Local", {
 
-    arq  <- system.file("extdata/cpart_parquet/schema.json", package = "dbrenovaveis")
+    arq  <- system.file("extdata/cpart_parquet/schema.json", package = "dbinterface")
     conn <- conectamock(arq)
     expect_true(inherits(conn, "mock"))
     expect_equal(attr(conn, "uri"), sub("/schema.json", "", arq))
 
-    arq2 <- system.file("extdata/cpart_parquet", package = "dbrenovaveis")
+    arq2 <- system.file("extdata/cpart_parquet", package = "dbinterface")
     conn2 <- conectamock(arq2)
     expect_identical(conn, conn2)
 

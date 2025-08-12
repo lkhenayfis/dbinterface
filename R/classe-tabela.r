@@ -4,7 +4,7 @@
 #' 
 #' Funcao para geracao de objetos representativos das tabelas em um determinado banco de dados
 #' 
-#' Esta funcao faz parte do backend do pacote \code{dbrenovaveis}. Atraves dela e possivel 
+#' Esta funcao faz parte do backend do pacote \code{dbinterface}. Atraves dela e possivel 
 #' especificar a estrutura de qualquer tabela regular, definindo seus campos e correspondentes 
 #' tipos, particoes e outros atributos.
 #' 
@@ -26,26 +26,26 @@
 #' 
 #' # contruindo uma tabela nao particionada a partir do dado exemplo do pacote
 #' # utilizando um pequeno subset de suas colunas para simplificar o exemplo
-#' tab <- dbrenovaveis:::new_tabela(
+#' tab <- dbinterface:::new_tabela(
 #'     nome = "subbacias",
 #'     campos = list(
-#'         dbrenovaveis:::new_campo("posto", "int"),
-#'         dbrenovaveis:::new_campo("nome", "string"),
-#'         dbrenovaveis:::new_campo("codigo", "string")
+#'         dbinterface:::new_campo("posto", "int"),
+#'         dbinterface:::new_campo("nome", "string"),
+#'         dbinterface:::new_campo("codigo", "string")
 #'     ),
-#'     uri = system.file("extdata/cpart_parquet/subbacias/", package = "dbrenovaveis"),
+#'     uri = system.file("extdata/cpart_parquet/subbacias/", package = "dbinterface"),
 #'     tipo_arquivo = ".parquet.gzip"
 #' )
 #' 
 #' # construindo uma tabela particionada
-#' tab <- dbrenovaveis:::new_tabela(
+#' tab <- dbinterface:::new_tabela(
 #'     nome = "vazoes",
 #'     campos = list(
-#'         dbrenovaveis:::new_campo("data", "date"),
-#'         dbrenovaveis:::new_campo("codigo", "string"),
-#'         dbrenovaveis:::new_campo("vazao", "float")
+#'         dbinterface:::new_campo("data", "date"),
+#'         dbinterface:::new_campo("codigo", "string"),
+#'         dbinterface:::new_campo("vazao", "float")
 #'     ),
-#'     uri = system.file("extdata/cpart_parquet/vazoes/", package = "dbrenovaveis"),
+#'     uri = system.file("extdata/cpart_parquet/vazoes/", package = "dbinterface"),
 #'     particoes = c("codigo"),
 #'     tipo_arquivo = ".parquet.gzip",
 #'     descricao = "Dados de entrada de vazao observada"
@@ -96,10 +96,10 @@ new_tabela <- function(nome, campos, uri, tipo_arquivo, particoes = NULL, descri
 #' @examples 
 #' 
 #' # Usando as mesmas tabelas exemplificadas na doc de `new_tabela`
-#' arq1 <- system.file("extdata/cpart_parquet/subbacias/schema.json", package = "dbrenovaveis")
-#' tab1 <- dbrenovaveis:::schema2tabela(arq1)
-#' arq2 <- system.file("extdata/cpart_parquet/vazoes/schema.json", package = "dbrenovaveis")
-#' tab2 <- dbrenovaveis:::schema2tabela(arq2)
+#' arq1 <- system.file("extdata/cpart_parquet/subbacias/schema.json", package = "dbinterface")
+#' tab1 <- dbinterface:::schema2tabela(arq1)
+#' arq2 <- system.file("extdata/cpart_parquet/vazoes/schema.json", package = "dbinterface")
+#' tab2 <- dbinterface:::schema2tabela(arq2)
 #' 
 #' @return objeto \code{tabela}
 
@@ -222,10 +222,10 @@ lista_conteudo.tabela_s3 <- function(tabela) {
 #' @examples 
 #' 
 #' # para a tabela exemplo 'assimilacao' particionada por 'codigo' e 'dia_assimilacao'
-#' arq <- system.file("extdata/cpart_parquet/ass/schema.json", package = "dbrenovaveis")
-#' tab <- dbrenovaveis:::schema2tabela(arq)
+#' arq <- system.file("extdata/cpart_parquet/ass/schema.json", package = "dbinterface")
+#' tab <- dbinterface:::schema2tabela(arq)
 #' 
-#' mestra <- dbrenovaveis:::build_master_unit(tab)
+#' mestra <- dbinterface:::build_master_unit(tab)
 #' 
 #' \dontrun{
 #' print(mestra)

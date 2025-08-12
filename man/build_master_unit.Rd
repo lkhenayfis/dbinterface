@@ -29,10 +29,10 @@ vez que uma leitura particionada ocorresse, o que nao e ideal.
 \examples{
 
 # para a tabela exemplo 'assimilacao' particionada por 'codigo' e 'dia_assimilacao'
-arq <- system.file("extdata/cpart_parquet/ass/schema.json", package = "dbrenovaveis")
-tab <- dbrenovaveis:::schema2tabela(arq)
+arq <- system.file("extdata/cpart_parquet/ass/schema.json", package = "dbinterface")
+tab <- dbinterface:::schema2tabela(arq)
 
-mestra <- dbrenovaveis:::build_master_unit(tab)
+mestra <- dbinterface:::build_master_unit(tab)
 
 \dontrun{
 print(mestra)

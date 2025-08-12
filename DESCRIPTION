@@ -1,12 +1,13 @@
-Package: dbrenovaveis
-Title: Acesso Aos Bancos De Dados PEM-Renovaveis
+Package: dbinterface
+Title: Backend Para Acesso A Bancos De Dados `mock` E Relacionais
 Version: 0.8.1
 Authors@R: 
     person("Lucas", "Khenayfis", , "lucaskhenayfis@gmail.com", role = c("aut", "cre"))
-Description: Este pacote contem funcoes para facilitacao do acesso aos
-    bancos de dados associados a area de energias renovaveis da PEM. Isto
-    inclui acesso, escrita e resgate de informacoes acerca dos bancos
-    disponiveis.
+Description: Este pacote fornece funcionalidade backend para interface com bancos
+    localizados em um diretorio local ou em um bucket S3. A versao atual
+    suporta particionamento de dados, porem apenas operacoes de leitura
+    estao implementadas. Criacao de novas tabelas e escrita nas existentes
+    serao adicionadas em versoes futuras.
 License: MIT + file LICENSE
 Depends:
     R (>= 4.0)

@@ -18,11 +18,11 @@ objeto de conexao com o mock banco
 Gera a conexao com um mock banco, correspondente a um diretorio local ou s3
 }
 \details{
-Os bancos mock de \code{dbrenovaveis} correspondem a arquivos de dados, em \code{csv} ou \code{parquet}, em
+Os bancos mock de \code{dbinterface} correspondem a arquivos de dados, em \code{csv} ou \code{parquet}, em
 diretorios locais ou buckets no s3 dentro. Para correto funcionamento desta implementacao se
 espera uma certa estrutura de arquivos e diretorios de tal modo que o pacote consiga encontrar
 os dados relevantes. Recomenda-se ler a vignette
-\code{vignette("estrutura-mock", package = "dbrenovaveis")} para maiores detalhes a respeito desta
+\code{vignette("estrutura-mock", package = "dbinterface")} para maiores detalhes a respeito desta
 estrutura de mock banco.
 
 A conexao com bancos mock possui apenas um argumento de entrada: \code{schema}. Este e ou o caminho a
@@ -37,7 +37,7 @@ e o json lido nao possua essa chave, sera adicionada como igual ao caminho \code
 # conexao com o mock banco exemplo do pacote
 
 # passando o diretorio
-arq_schema <- system.file("extdata/cpart_parquet/schema.json", package = "dbrenovaveis")
+arq_schema <- system.file("extdata/cpart_parquet/schema.json", package = "dbinterface")
 conn1 <- conectamock(arq_schema)
 
 # passando o a lista de schema ja lido

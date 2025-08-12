@@ -20,7 +20,7 @@ test_that("Correcao de POSIX", {
 
 test_that("Leitura de banco mock", {
 
-    arq  <- system.file("extdata/cpart_parquet/schema.json", package = "dbrenovaveis")
+    arq  <- system.file("extdata/cpart_parquet/schema.json", package = "dbinterface")
     conn <- conectamock(arq)
 
     dat1 <- getfromdb(conn, "subbacias", codigo = "AVERMELHA")

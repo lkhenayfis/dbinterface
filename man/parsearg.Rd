@@ -33,14 +33,14 @@ colchetes sao opcionais, tanto no limite inicial quanto final.
 }
 \examples{
 
-tab <- dbrenovaveis:::new_tabela(
+tab <- dbinterface:::new_tabela(
     nome = "vazoes",
     campos = list(
-        dbrenovaveis:::new_campo("data", "date"),
-        dbrenovaveis:::new_campo("codigo", "string"),
-        dbrenovaveis:::new_campo("valor", "string")
+        dbinterface:::new_campo("data", "date"),
+        dbinterface:::new_campo("codigo", "string"),
+        dbinterface:::new_campo("valor", "string")
     ),
-    uri = system.file("extdata/cpart_parquet/vazoes/", package = "dbrenovaveis"),
+    uri = system.file("extdata/cpart_parquet/vazoes/", package = "dbinterface"),
     tipo_arquivo = ".parquet.gzip"
 )
 

@@ -1,13 +1,13 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# dbrenovaveis
+# dbinterface
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/lkhenayfis/dbrenovaveis/workflows/R-CMD-check/badge.svg)](https://github.com/lkhenayfis/dbrenovaveis/actions)
-[![test-coverage](https://github.com/lkhenayfis/dbrenovaveis/workflows/test-coverage/badge.svg)](https://github.com/lkhenayfis/dbrenovaveis/actions)
-[![codecov](https://codecov.io/gh/lkhenayfis/dbrenovaveis/graph/badge.svg?token=2E8YI878Y4)](https://codecov.io/gh/lkhenayfis/dbrenovaveis)
+[![R-CMD-check](https://github.com/lkhenayfis/dbinterface/workflows/R-CMD-check/badge.svg)](https://github.com/lkhenayfis/dbinterface/actions)
+[![test-coverage](https://github.com/lkhenayfis/dbinterface/workflows/test-coverage/badge.svg)](https://github.com/lkhenayfis/dbinterface/actions)
+[![codecov](https://codecov.io/gh/lkhenayfis/dbinterface/graph/badge.svg?token=2E8YI878Y4)](https://codecov.io/gh/lkhenayfis/dbinterface)
 <!-- badges: end -->
 
 ## Visao geral
@@ -25,8 +25,8 @@ deve ser instalado diretamente a partir do repositorio utilizando:
 
 ``` r
 # Caso a biblioteca remotes nao esteja instalada, execute install.packages("remotes") primeiro
-remotes::install_github("lkhenayfis/dbrenovaveis") # instalacao da versao de desenvolvimento
-remotes::install_github("lkhenayfis/dbrenovaveis@*release") # instalacao da ultima versao fechada
+remotes::install_github("lkhenayfis/dbinterface") # instalacao da versao de desenvolvimento
+remotes::install_github("lkhenayfis/dbinterface@*release") # instalacao da ultima versao fechada
 ```
 
 ## Exemplo de uso
@@ -40,7 +40,7 @@ O primeiro passo para acesso aos dados em um determinado banco e
 estabeler uma conexao com o mesmo.
 
 ``` r
-dir_banco_local <- system.file("extdata/cpart_parquet", package = "dbrenovaveis")
+dir_banco_local <- system.file("extdata/cpart_parquet", package = "dbinterface")
 conexao <- conectamock(dir_banco_local)
 ```
 

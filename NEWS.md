@@ -8,14 +8,14 @@
 * Argumentos de subset em `getfromdb` que nao correspondem a campos tabela sendo acessada nao mais
   causam erro. Estes agora sao ignorados no processamento de `parseargs`
 
-# dbrenovaveis 0.8
+# dbinterface 0.8
 
 ## New features 
 
 * Leitura de tabelas mock em `parquet.gzip` agora e realizada por *lazy loading*, economizando tempo
   e memoria na manipulacao de grandes datasets nao particionados
 
-# dbrenovaveis 0.7
+# dbinterface 0.7
 
 ## New features
 
@@ -34,7 +34,7 @@
 * Essencialmente todo o backend do pacote foi reestruturado e reorganizado de maneira mais coerente
 * A testagem foi refeita inteiramente do zero, estando agora muito mais robusta e confiavel
 
-# dbrenovaveis 0.6
+# dbinterface 0.6
 
 ## Bug fixes
 
@@ -44,7 +44,7 @@
 ## Misc
 
 * Toda a representacao de tabelas e a forma como argumentos de query sao interpretados para composicao
-  das strings de query foi reformulada. Agora e possivel utilizar o backend de `dbrenovaveis` para
+  das strings de query foi reformulada. Agora e possivel utilizar o backend de `dbinterface` para
   conexao com bancos de estrutura arbitraria. A seguir sao dados mais detalhes
 * Foram incluidas duas novas classes: `tabela` e `campo`
   * `tabela`s sao representacoes simbolicas das tabelas no banco, sendo compostas por uma lista detalhando
@@ -55,7 +55,7 @@
 * Uma nova funcao de baixo nivel `getfromtabela` foi introduzida, permitindo interface para leitura
   com quaisquer tabelas em bancos arbitrarios
 
-# dbrenovaveis 0.5
+# dbinterface 0.5
 
 ## New features
 
@@ -79,7 +79,7 @@
 
 * Muda conectores para um arquivo proprio `R/misc.r -> R/conectores.r`
 
-# dbrenovaveis 0.4
+# dbinterface 0.4
 
 ## New features
 
@@ -93,21 +93,21 @@
   usuario informe codigos de usinas e nomes de modelos em letras maiusculas, tal qual estes nomes
   estao salvos no banco
 
-# dbrenovaveis 0.3.2
+# dbinterface 0.3.2
 
 ## Bug fixes
 
 * Corrige bug de query de usinas quando o codigo continha a string "IN". Dentro da adequacao para
   query em dados locais isto estava sendo substituido para "%in%" e retornando resultados errados
 
-# dbrenovaveis 0.3.1
+# dbinterface 0.3.1
 
 ## Bug fixes
 
 * Corrige problema no teste de `parsedatas` em sistemas operacionais linux
 * Passa a exportar `conectalocal`
 
-# dbrenovaveis 0.3
+# dbinterface 0.3
 
 ## New features
 
@@ -121,7 +121,7 @@
   virada de horario de verao, pois meia noite e meia noite e meia "nao existem". Foi introduzida
   uma funcao para execucao das queries que controla o tz da coluna de datas para evitar o erro.
 
-# dbrenovaveis 0.2
+# dbinterface 0.2
 
 ## New features
 
@@ -131,7 +131,7 @@
 * Adiciona funcoes `getusinas` e `getmodelos` para pegar informacoes qualitativas a respeito das
   usinas e modelos de previsao meteorologica presentes no banco
 
-# dbrenovaveis 0.1
+# dbinterface 0.1
 
 Este pacote contem funcoes para facilitacao do acesso aos bancos de dados associados a area de
 energias renovaveis da PEM. Isto inclui acesso, escrita e resgate de informacoes acerca dos bancos

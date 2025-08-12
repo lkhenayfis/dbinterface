@@ -1,7 +1,7 @@
 
 test_that("Testes de validacao de schema_tabela", {
 
-    arq <- system.file("extdata/cpart_parquet/vazoes/schema.json", package = "dbrenovaveis")
+    arq <- system.file("extdata/cpart_parquet/vazoes/schema.json", package = "dbinterface")
 
     schema <- schema0 <- jsonlite::read_json(arq)
 
@@ -32,7 +32,7 @@ test_that("Testes de validacao de schema_tabela", {
 
 test_that("Testes de validacao de schema_banco", {
 
-    arq <- system.file("extdata/cpart_parquet/schema.json", package = "dbrenovaveis")
+    arq <- system.file("extdata/cpart_parquet/schema.json", package = "dbinterface")
 
     schema <- schema0 <- jsonlite::read_json(arq)
 
@@ -60,7 +60,7 @@ test_that("Testes de composicao de schema completo", {
     # nao importa o conteudo, so pega o erro de passar os dois ao mesmo tempo
     expect_error(compoe_schema("teste", list()))
 
-    arq <- system.file("extdata/cpart_parquet/schema.json", package = "dbrenovaveis")
+    arq <- system.file("extdata/cpart_parquet/schema.json", package = "dbinterface")
 
     # lendo direto e passando lista, sem uri root, da erro
     schema_banco <- jsonlite::read_json(arq)
@@ -68,7 +68,7 @@ test_that("Testes de composicao de schema completo", {
 
     schema <- compoe_schema(arq)
 
-    root <- system.file("extdata/cpart_parquet", package = "dbrenovaveis")
+    root <- system.file("extdata/cpart_parquet", package = "dbinterface")
     dirs <- file.path(root, c("ass", "parametros", "precobs", "prevs", "vazoes", "subbacias"))
 
     schemas_tabelas <- lapply(file.path(dirs, "schema.json"), jsonlite::read_json)

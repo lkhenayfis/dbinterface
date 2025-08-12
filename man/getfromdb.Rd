@@ -29,7 +29,7 @@ ser retido na query.
 \examples{
 
 # usando banco mock de exemplo do pacote
-arq <- system.file("extdata/cpart_parquet/schema.json", package = "dbrenovaveis")
+arq <- system.file("extdata/cpart_parquet/schema.json", package = "dbinterface")
 conn <- conectamock(arq)
 
 subbacias <- getfromdb(conn, "subbacias", c("nome", "codigo", "bacia_smap"))

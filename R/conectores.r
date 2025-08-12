@@ -41,8 +41,8 @@ conectabanco <- function(usuario, banco) {
         stop("Pacotes 'DBI' e 'RPostgreSQL' sao necessarios para interface com banco relacional")
     }
 
-    usuario <- readRDS(file.path(Sys.getenv("dbrenovaveis-cachedir"), paste0("user_", usuario, ".rds")))
-    banco   <- readRDS(file.path(Sys.getenv("dbrenovaveis-cachedir"), paste0("db_", banco, ".rds")))
+    usuario <- readRDS(file.path(Sys.getenv("dbinterface-cachedir"), paste0("user_", usuario, ".rds")))
+    banco   <- readRDS(file.path(Sys.getenv("dbinterface-cachedir"), paste0("db_", banco, ".rds")))
 
     conn <- DBI::dbConnect(
         drv = DBI::dbDriver("PostgreSQL"),
@@ -57,11 +57,11 @@ conectabanco <- function(usuario, banco) {
 #' 
 #' Gera a conexao com um mock banco, correspondente a um diretorio local ou s3
 #' 
-#' Os bancos mock de \code{dbrenovaveis} correspondem a arquivos de dados, em `csv` ou `parquet`, em
+#' Os bancos mock de \code{dbinterface} correspondem a arquivos de dados, em `csv` ou `parquet`, em
 #' diretorios locais ou buckets no s3 dentro. Para correto funcionamento desta implementacao se 
 #' espera uma certa estrutura de arquivos e diretorios de tal modo que o pacote consiga encontrar
 #' os dados relevantes. Recomenda-se ler a vignette
-#' `vignette("estrutura-mock", package = "dbrenovaveis")` para maiores detalhes a respeito desta
+#' `vignette("estrutura-mock", package = "dbinterface")` para maiores detalhes a respeito desta
 #' estrutura de mock banco.
 #' 
 #' A conexao com bancos mock possui apenas um argumento de entrada: `schema`. Este e ou o caminho a
@@ -80,7 +80,7 @@ conectabanco <- function(usuario, banco) {
 #' # conexao com o mock banco exemplo do pacote
 #' 
 #' # passando o diretorio
-#' arq_schema <- system.file("extdata/cpart_parquet/schema.json", package = "dbrenovaveis")
+#' arq_schema <- system.file("extdata/cpart_parquet/schema.json", package = "dbinterface")
 #' conn1 <- conectamock(arq_schema)
 #' 
 #' # passando o a lista de schema ja lido

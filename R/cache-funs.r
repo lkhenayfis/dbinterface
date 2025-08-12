@@ -37,7 +37,7 @@ NULL
 #' @rdname cache_funs
 
 registra_credenciais <- function(usuario, senha, tag) {
-    cachedir <- Sys.getenv("dbrenovaveis-cachedir")
+    cachedir <- Sys.getenv("dbinterface-cachedir")
 
     out <- list(usuario, senha)
     saveRDS(out, file.path(cachedir, paste0("user_", tag, ".rds")))
@@ -48,7 +48,7 @@ registra_credenciais <- function(usuario, senha, tag) {
 #' @rdname cache_funs
 
 registra_banco <- function(host, port, database, tag) {
-    cachedir <- Sys.getenv("dbrenovaveis-cachedir")
+    cachedir <- Sys.getenv("dbinterface-cachedir")
 
     out <- list(host, port, database)
     saveRDS(out, file.path(cachedir, paste0("db_", tag, ".rds")))
@@ -68,7 +68,7 @@ NULL
 #' @rdname list_cache_funs
 
 lista_credenciais <- function() {
-    cachedir <- Sys.getenv("dbrenovaveis-cachedir")
+    cachedir <- Sys.getenv("dbinterface-cachedir")
     list.files(cachedir, pattern = "^user_")
 }
 
@@ -77,6 +77,6 @@ lista_credenciais <- function() {
 #' @rdname list_cache_funs
 
 lista_bancos <- function() {
-    cachedir <- Sys.getenv("dbrenovaveis-cachedir")
+    cachedir <- Sys.getenv("dbinterface-cachedir")
     list.files(cachedir, pattern = "^db_")
 }

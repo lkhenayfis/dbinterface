@@ -55,7 +55,7 @@ test_that("Criacao de tabelas -- dado teste s/ particao", {
 
     # TESTE DE TABELA LOCAL ----------------------------------------------
 
-    dir <- system.file("extdata/cpart_parquet/subbacias/", package = "dbrenovaveis")
+    dir <- system.file("extdata/cpart_parquet/subbacias/", package = "dbinterface")
     arq <- file.path(dir, "schema.json")
 
     # para que os testes de composicao de banco funcionem apos instalacao do pacote em qualquer
@@ -83,7 +83,7 @@ test_that("Criacao de tabelas -- dado teste c/ particao", {
 
     # TESTE DE TABELA LOCAL ----------------------------------------------
 
-    dir <- system.file("extdata/cpart_parquet/vazoes/", package = "dbrenovaveis")
+    dir <- system.file("extdata/cpart_parquet/vazoes/", package = "dbinterface")
     arq <- file.path(dir, "schema.json")
 
     # para que os testes de composicao de banco funcionem apos instalacao do pacote em qualquer

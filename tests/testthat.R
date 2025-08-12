@@ -1,6 +1,6 @@
 library(testthat)
-library(dbrenovaveis)
+library(dbinterface)
 
 options(arrow.unsafe_metadata = TRUE)
 
-test_check("dbrenovaveis")
+test_check("dbinterface")

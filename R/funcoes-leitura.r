@@ -11,11 +11,11 @@
 #' @examples 
 #' 
 #' # para leitura de um json
-#' fun1 <- dbrenovaveis:::switch_reader_func("json", FALSE)
+#' fun1 <- dbinterface:::switch_reader_func("json", FALSE)
 #' identical(body(fun1)[[1]], jsonlite::read_json)
 #' 
 #' # para leitura de um csv
-#' fun2 <- dbrenovaveis:::switch_reader_func(".csv", FALSE)
+#' fun2 <- dbinterface:::switch_reader_func(".csv", FALSE)
 #' identical(body(fun2)[[1]], data.table::fread)
 #' 
 #' @return funcao cujo primeiro argumento e o caminho (local ou s3) do arquivo a ser lido e retorna
