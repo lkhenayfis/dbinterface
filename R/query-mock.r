@@ -72,6 +72,7 @@ proc_query_mock_spart <- function(conexao, query) {
 
     for (q in query$WHERE) dat <- apply_where(dat, q)
     dat <- dplyr::collect(dat)
+    setDT(dat)
 
     cols <- query$SELECT
     dat <- dat[, .SD, .SDcols = cols]
