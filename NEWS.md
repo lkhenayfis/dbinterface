@@ -1,4 +1,19 @@
-# master
+# dbinterface 0.8.2
+
+## Bug fixes
+
+* Corrige erro em leitura de parquets gerados abstratamente. Aparentemente parquets gerados pelo R
+  guardam seus atributos de R originais, de modo que a leitura de um `data.table` salvo como parquet
+  volta como `data.table`.
+  `proc_query_mock_spart` contava com trabalhar em `data.tables` sem realizar a verificacao, que foi
+  agora adicionada
+
+# dbinterface 0.8.1
+
+## New features 
+
+* Leitura de tabelas mock em `parquet.gzip` agora e realizada por *lazy loading*, economizando tempo
+  e memoria na manipulacao de grandes datasets nao particionados
 
 ## Misc
 
@@ -7,13 +22,6 @@
   funcionalidade agora e opcional
 * Argumentos de subset em `getfromdb` que nao correspondem a campos tabela sendo acessada nao mais
   causam erro. Estes agora sao ignorados no processamento de `parseargs`
-
-# dbinterface 0.8
-
-## New features 
-
-* Leitura de tabelas mock em `parquet.gzip` agora e realizada por *lazy loading*, economizando tempo
-  e memoria na manipulacao de grandes datasets nao particionados
 
 # dbinterface 0.7
 

@@ -1,6 +1,6 @@
 Package: dbinterface
 Title: Backend Para Acesso A Bancos De Dados `mock` E Relacionais
-Version: 0.8.1.9000
+Version: 0.8.2
 Authors@R: 
     person("Lucas", "Khenayfis", , "lucaskhenayfis@gmail.com", role = c("aut", "cre"))
 Description: Este pacote fornece funcionalidade backend para interface com bancos `mock`
