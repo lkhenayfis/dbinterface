@@ -28,7 +28,7 @@ test_that("Criacao de tabelas -- manual", {
     expect_equal(attr(tabela1, "uri"), "/qualquer/caminho/local/")
     expect_equal(attr(tabela1, "tipo_arquivo"), ".csv")
     expect_true(is.null(attr(tabela1, "descricao")))
-    expect_equal(attr(tabela1, "reader_func"), inner_csv)
+    expect_equal(attr(tabela1, "reader_func"), inner_reader_csv)
     expect_equal(attr(tabela1, "master"), data.table::data.table(tabela = "tabela_teste"))
 
     # print de tabela
@@ -70,7 +70,7 @@ test_that("Criacao de tabelas -- dado teste s/ particao", {
     expect_equal(class(tabela1), c("tabela_local", "tabela"))
     expect_equal(attr(tabela1, "uri"), dir)
     expect_equal(attr(tabela1, "tipo_arquivo"), ".parquet.gzip")
-    expect_equal(attr(tabela1, "reader_func"), inner_parquet_gzip)
+    expect_equal(attr(tabela1, "reader_func"), inner_reader_parquet_gzip)
 
     master <- attr(tabela1, "master")
     expect_equal(nrow(master), 1)
@@ -98,7 +98,7 @@ test_that("Criacao de tabelas -- dado teste c/ particao", {
     expect_equal(class(tabela1), c("tabela_local", "tabela"))
     expect_equal(attr(tabela1, "uri"), dir)
     expect_equal(attr(tabela1, "tipo_arquivo"), ".parquet.gzip")
-    expect_equal(attr(tabela1, "reader_func"), inner_parquet_gzip)
+    expect_equal(attr(tabela1, "reader_func"), inner_reader_parquet_gzip)
 
     master <- attr(tabela1, "master")
     expect_equal(nrow(master), 2)

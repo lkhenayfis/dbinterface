@@ -23,15 +23,15 @@
 
 switch_reader_func <- function(extensao, s3 = FALSE) {
     extensao <- valida_tipo_arquivo(extensao)
-    inner_reader <- eval(parse(text = paste0("inner", gsub("\\.", "_", extensao))))
+    inner_reader <- eval(parse(text = paste0("inner_reader", gsub("\\.", "_", extensao))))
 
     if (s3) {
         if (!requireNamespace("aws.s3", quietly = TRUE)) {
             stop("Pacote 'aws.s3' e necessario para leitura de arquivos no s3")
         }
-        reader_func <- outer_s3(inner_reader)
+        reader_func <- outer_reader_s3(inner_reader)
     } else {
-        reader_func <- outer_local(inner_reader)
+        reader_func <- outer_reader_local(inner_reader)
     }
 
     return(reader_func)
@@ -55,19 +55,19 @@ valida_tipo_arquivo <- function(tipo) {
 
 # FUNCOES DE LEITURA INTERNAS ----------------------------------------------------------------------
 
-inner_json <- function(x, ...) jsonlite::read_json(x, ...)
+inner_reader_json <- function(x, ...) jsonlite::read_json(x, ...)
 
-inner_csv <- function(x, ...) data.table::fread(x, ...)
+inner_reader_csv <- function(x, ...) data.table::fread(x, ...)
 
-inner_parquet <- function(x, ...) arrow::read_parquet(x, as_data_frame = FALSE, ...)
+inner_reader_parquet <- function(x, ...) arrow::read_parquet(x, as_data_frame = FALSE, ...)
 
-inner_parquet_gzip <- function(x, ...) arrow::read_parquet(x, as_data_frame = FALSE, ...)
+inner_reader_parquet_gzip <- function(x, ...) arrow::read_parquet(x, as_data_frame = FALSE, ...)
 
 # FUNCOES DE LEITURA EXTERNAS ----------------------------------------------------------------------
 
-outer_local <- function(inner_fun, ...) inner_fun
+outer_reader_local <- function(inner_fun, ...) inner_fun
 
-outer_s3 <- function(inner_fun, ...) {
+outer_reader_s3 <- function(inner_fun, ...) {
     function(x, ...) {
         x <- strsplit(x, "/")[[1]]
         bucket <- do.call(file.path, as.list(c(head(x, 3), "")))
