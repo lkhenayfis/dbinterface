@@ -1,3 +1,10 @@
+# dbinterface 0.9
+
+## New features
+
+* Add suporte a leitura de arquivos `.rds`
+* Add script `funcoes-escrita.r` com o backend necessario para implementacao de escrita de dados
+
 # dbinterface 0.8.2
 
 ## Bug fixes
