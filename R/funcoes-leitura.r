@@ -39,7 +39,7 @@ switch_reader_func <- function(extensao, s3 = FALSE) {
 
 valida_tipo_arquivo <- function(tipo) {
     if (!grepl("^\\.", tipo)) tipo <- paste0(".", tipo)
-    suport <- c(".csv", ".json", ".parquet", ".parquet.gzip")
+    suport <- c(".rds", ".csv", ".json", ".parquet", ".parquet.gzip")
     if (!(tipo %in% suport)) {
         msg <- paste0("Tipo de arquivo nao permitido -- deve ser um de (",
             paste0(suport, collapse = ", "), ")")
@@ -54,6 +54,8 @@ valida_tipo_arquivo <- function(tipo) {
 }
 
 # FUNCOES DE LEITURA INTERNAS ----------------------------------------------------------------------
+
+inner_reader_rds <- function(x, ...) readRDS(x, ...)
 
 inner_reader_json <- function(x, ...) jsonlite::read_json(x, ...)
 
