@@ -26,7 +26,7 @@ checa_particao <- function(conexao, query) {
 #' @return data.table contendo a tabela lida
 
 le_tabela_mock <- function(tabela, arquivo, ...) {
-    rf  <- attr(tabela, "reader_fun")
+    rf  <- attr(tabela, "reader_func")
     arq <- file.path(attr(tabela, "uri"), paste0(arquivo, attr(tabela, "tipo_arquivo")))
     dat <- rf(arq, ...)
     return(dat)
