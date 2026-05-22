@@ -1,8 +1,6 @@
 
 test_that("Testes de modificacao de query", {
 
-    skip("Epic 04 carry-forward: query2subset round-trip degrades on vector SELECT; resolved when query2subset is deleted (ticket-017) and snapshots are re-recorded (ticket-020)")
-
     # baseado em uma tabela fake
     tabela1 <- new_tabela(
         "tabela_teste",
@@ -16,7 +14,7 @@ test_that("Testes de modificacao de query", {
         ".csv"
     )
 
-    parsed_2 <- query2subset(parseargs(tabela1, c("data", "valor"), data = "2000/"))
+    parsed_2 <- parseargs(tabela1, c("data", "valor"), data = "2000/")
     expect_equal(parsed_2$SELECT, c("data", "valor"))
     expect_equal(parsed_2$FROM, "tabela_teste")
     expect_true(is.list(parsed_2$WHERE))
@@ -24,7 +22,7 @@ test_that("Testes de modificacao de query", {
     expect_equal(parsed_2$WHERE$data,
         str2lang("(data >= as.POSIXct('2000-01-01 00:00:00')) & (data < as.POSIXct('3999-01-01 00:00:01'))"))
 
-    parsed_3 <- query2subset(parseargs(tabela1, c("codigo", "data", "valor"), codigo = c("A", "B")))
+    parsed_3 <- parseargs(tabela1, c("codigo", "data", "valor"), codigo = c("A", "B"))
     expect_equal(parsed_3$SELECT, c("codigo", "data", "valor"))
     expect_equal(parsed_3$FROM, "tabela_teste")
     expect_true(is.list(parsed_3$WHERE))
@@ -48,10 +46,7 @@ test_that("Leitura de dados mock -- Local", {
     query <- parseargs(
         conn$tabelas$subbacias, c("codigo", "nome", "bacia_smap"),
         codigo = "BAIXOIG")
-    query <- query2subset(query)
     dat1  <- suppressWarnings(proc_query_mock_spart(conn, query))
-    # DEGRADED until ticket-017 (query2subset deletion); snapshot re-recorded under
-    # the truncated single-column output. Ticket-020 re-records cleanly post-deletion.
     expect_snapshot_value(unlist(dat1), style = "deparse")
 
     dat1.1 <- suppressWarnings(getfromdb(conn, "subbacias", c("codigo", "nome", "bacia_smap"), codigo = "BAIXOIG"))
@@ -61,9 +56,7 @@ test_that("Leitura de dados mock -- Local", {
 
     query <- parseargs(conn$tabelas$previstos, c("data_previsao", "codigo", "rsolo"),
         dia_previsao = 1, data_previsao = "2020-01-01", codigo = "AVERMELHA")
-    query <- query2subset(query)
     dat1  <- suppressWarnings(proc_query_mock_cpart(conn, query))
-    # DEGRADED until ticket-017 (see above).
     expect_snapshot_value(unlist(dat1), style = "deparse")
 
     dat1.1 <- suppressWarnings(getfromdb(conn, "previstos", c("data_previsao", "codigo", "rsolo"),
@@ -91,7 +84,6 @@ test_that("Leitura de dados mock -- S3", {
     # leitura de tabela sem particao -------------------------------------
 
     query <- parseargs(conn$tabelas$subbacias, c("codigo", "nome", "bacia_smap"), codigo = "BAIXOIG")
-    query <- query2subset(query)
     dat1  <- suppressWarnings(proc_query_mock_spart(conn, query))
     expect_snapshot_value(unlist(dat1), style = "deparse")
 
@@ -102,7 +94,6 @@ test_that("Leitura de dados mock -- S3", {
 
     query <- parseargs(conn$tabelas$vazoes, c("data", "codigo", "vazao"),
         codigo = "AVERMELHA", data = "2020-01-01")
-    query <- query2subset(query)
     dat1  <- suppressWarnings(proc_query_mock_cpart(conn, query))
     expect_snapshot_value(unlist(dat1), style = "deparse")
 

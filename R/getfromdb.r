@@ -88,8 +88,6 @@ roda_query <- function(conexao, query) UseMethod("roda_query")
 #' @exportS3Method
 roda_query.mock <- function(conexao, query) {
 
-    query <- query2subset(query)
-
     oldtz <- Sys.getenv("TZ")
     Sys.setenv("TZ" = "GMT")
 

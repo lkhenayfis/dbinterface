@@ -1,19 +1,5 @@
 ################################# FUNCOES PARA QUERY DE MOCK BANCOS ################################
 
-#' Transforma Query Em Expressoes De Subset
-#' 
-#' Auxiliar para conversao de strings de query em db para expressoes de subset em data.table
-#' 
-#' @param query lista contendo termos SELECT, WHERE e ORDERBY de uma query
-#' 
-#' @return mesma lista com os termos em questao convertidos para expressoes de subset
-
-query2subset <- function(query) {
-    query$SELECT <- strsplit(query$SELECT, ",")[[1]]
-    if (!is.null(query[["ORDER BY"]])) query[["ORDER BY"]] <- strsplit(query[["ORDER BY"]], ",")[[1]]
-    return(query)
-}
-
 #' Checa Existencia De Particoes Locais
 #' 
 #' Avalia se uma tabela local corresponde a conjunto de particoes ou nao
@@ -76,10 +62,6 @@ proc_query_mock_spart <- function(conexao, query) {
 
     cols <- query$SELECT
     dat <- dat[, .SD, .SDcols = cols]
-
-    cc_order <- list(quote(setorder), quote(dat))
-    for (i in query[["ORDER BY"]]) cc_order <- c(cc_order, list(str2lang(i)))
-    eval(as.call(cc_order))
 
     return(dat)
 }
