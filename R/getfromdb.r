@@ -73,34 +73,14 @@ getfromdb <- function(conexao, tabela, campos = NA, ...) {
 #' da query e retorna-lo ao valor original depois. Ao retornar o valor, o R desloca as datas, entao
 #' e preciso modificar o atributo tzone da coluna de datas de volta para GMT
 #' 
-#' @param conexao objeto de conexao ao banco retornado por \code{\link{conectabanco}}
+#' @param conexao objeto de conexao ao banco (mock ou morgana)
 #' @param query lista detalhando a query como retornado por \code{\link{parseargs}}
-#' 
+#'
 #' @return dado recuperado do banco ou erro caso a query nao possa ser realizada
 
 roda_query <- function(conexao, query) UseMethod("roda_query")
 
-roda_query.default <- function(conexao, query) {
-
-    has_DBI <- requireNamespace("DBI", quietly = TRUE)
-    has_RPOSTGRE <- requireNamespace("RPostgreSQL", quietly = TRUE)
-    if (!has_DBI || !has_RPOSTGRE) {
-        stop("Pacotes 'DBI' e 'RPostgreSQL' sao necessarios para interface com banco relacional")
-    }
-
-    query <- collate_query(query)
-
-    oldtz <- Sys.getenv("TZ")
-    Sys.setenv("TZ" = "GMT")
-
-    out <- as.data.table(try(DBI::dbGetQuery(conexao, query), silent = TRUE))
-    out <- corrigeposix(out)
-
-    Sys.setenv("TZ" = oldtz)
-
-    if (class(out)[1] == "try-error") stop(out[1]) else return(out)
-}
-
+#' @exportS3Method
 roda_query.mock <- function(conexao, query) {
 
     query <- query2subset(query)
@@ -119,9 +99,10 @@ roda_query.mock <- function(conexao, query) {
 
     Sys.setenv("TZ" = oldtz)
 
-    if (class(out)[1] == "try-error") stop(out[1]) else return(out)
+    if (inherits(out, "try-error")) stop(out[1]) else return(out)
 }
 
+#' @exportS3Method
 roda_query.morgana <- function(conexao, query) {
 
     body <- list(
@@ -144,7 +125,7 @@ roda_query.morgana <- function(conexao, query) {
 
     Sys.setenv("TZ" = oldtz)
 
-    return(resp)
+    if (inherits(resp, "try-error")) stop(resp[1]) else return(resp)
 }
 
 # AUXILIARES ---------------------------------------------------------------------------------------
@@ -158,7 +139,7 @@ roda_query.morgana <- function(conexao, query) {
 #' @return Argumento \code{dat} com colunas POSIXct em fuso horario GMT
 
 corrigeposix <- function(dat) {
-    coldt <- sapply(dat, function(x) "POSIXct" %in% class(x))
+    coldt <- vapply(dat, function(x) "POSIXct" %in% class(x), logical(1L))
     if (sum(coldt) == 0) return(dat)
     coldt <- names(coldt)[coldt]
     dat[, (coldt) := lapply(.SD, as.numeric), .SDcols = coldt]
@@ -175,10 +156,7 @@ corrigeposix <- function(dat) {
 #' @return \code{data.table} convertido
 
 decode_output <- function(x) {
-    out <- jsonlite::base64_dec(x$body)
-    out <- arrow::read_parquet(out)
-    out <- as.data.table(out)
-    return(out)
+    as.data.table(arrow::read_parquet(jsonlite::base64_dec(x$body)))
 }
 
 #' Compoe Query Completa
@@ -190,9 +168,9 @@ decode_output <- function(x) {
 #' @return string com a query completa
 
 collate_query <- function(query) {
-    query <- query[!sapply(query, is.null)]
+    query <- query[!vapply(query, is.null, logical(1L))]
     query <- lapply(query, paste0, collapse = " AND ")
-    query <- sapply(names(query), function(p) paste(p, query[[p]]))
+    query <- vapply(names(query), function(p) paste(p, query[[p]]), character(1L))
     query <- paste(query, collapse = " ")
     return(query)
 }

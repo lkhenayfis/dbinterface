@@ -1,58 +1,5 @@
 ################################# FUNCOES GERAIS USADAS NO PACOTE ##################################
 
-#' Conexao Com Bancos
-#' 
-#' Gera a conexao com o banco \code{banco} utilizando as credenciais de \code{usuario}
-#' 
-#' ESTA FUNCAO NAO VEM SENDO SUPORTADA HA ALGUMAS VERSOES
-#' 
-#' Esta funcao e um simples wrapper para facilitacao da conexao com bancos de dados, utilizando
-#' as credenciais previamente registradas e salvas pelas funcoes apropriadas. 
-#' 
-#' @param usuario a tag associada a credenciais previamente regristradas com
-#'     \code{\link{registra_credenciais}}
-#' @param banco a tag associada a informacoes de banco previamente regristradas com
-#'     \code{\link{registra_banco}}
-#' 
-#' @examples 
-#' 
-#' # supondo usuario 'user' e banco 'db' ja registrados
-#' 
-#' \dontrun{
-#' # conecta ao banco com credenciais de 'user'
-#' conn <- conectabanco("user", "db")
-#' 
-#' # listando todas as tabelas no banco
-#' dbListTables(conn)
-#' 
-#' # listando campos (colunas) de uma determinada tabela
-#' dbListFields(conn, "nome_da_tabela")
-#' }
-#' 
-#' @return objeto de conexao ao banco. Veja \code{\link[DBI]{dbConnect}} para mais detalhes
-#' 
-#' @export
-
-conectabanco <- function(usuario, banco) {
-
-    has_DBI <- requireNamespace("DBI", quietly = TRUE)
-    has_RPOSTGRE <- requireNamespace("RPostgreSQL", quietly = TRUE)
-    if (!has_DBI || !has_RPOSTGRE) {
-        stop("Pacotes 'DBI' e 'RPostgreSQL' sao necessarios para interface com banco relacional")
-    }
-
-    usuario <- readRDS(file.path(Sys.getenv("dbinterface-cachedir"), paste0("user_", usuario, ".rds")))
-    banco   <- readRDS(file.path(Sys.getenv("dbinterface-cachedir"), paste0("db_", banco, ".rds")))
-
-    conn <- DBI::dbConnect(
-        drv = DBI::dbDriver("PostgreSQL"),
-        user = usuario[[1]], password = usuario[[2]],
-        host = banco[[1]], port = banco[[2]], dbname = banco[[3]]
-    )
-
-    return(conn)
-}
-
 #' Conexao Com Mock Bancos
 #' 
 #' Gera a conexao com um mock banco, correspondente a um diretorio local ou s3
@@ -118,6 +65,8 @@ conectamock <- function(schema) new_mock(schema)
 #' @param x_api_key chave de api para uso das funcoes que compoem o morgana na aws. Veja Detalhes
 #' 
 #' @return objeto de conexao com o mock banco via morgana
+#'
+#' @export
 
 conectamorgana <- function(schema, x_api_key = Sys.getenv("X_API_KEY")) {
 
@@ -154,7 +103,7 @@ new_mock <- function(schema, morgana = FALSE) {
     if (is_char) schema <- compoe_schema(schema) else schema <- compoe_schema(, schema)
 
     tabelas <- lapply(schema$tables, schema2tabela, no_master = morgana)
-    names(tabelas) <- sapply(tabelas, "[[", "nome")
+    names(tabelas) <- vapply(tabelas, "[[", "nome", FUN.VALUE = character(1L))
 
     out <- list(tabelas = tabelas)
     class(out) <- "mock"

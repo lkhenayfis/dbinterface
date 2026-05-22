@@ -62,12 +62,4 @@ test_that("Leitura de banco via morgana", {
     })
 })
 
-if (as.logical(Sys.getenv("TESTA_BANCO_POSTGRES", FALSE))) {
-
-    test_that("Leitura de banco Postgres", {
-        conn <- conectabanco("lucas", "banco_meta")
-    })
-
-}
-
 options(warn = w)

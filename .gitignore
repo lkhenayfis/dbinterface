@@ -1,3 +1,4 @@
 informals
 .Renviron
 plans/**
+*.tar.gz

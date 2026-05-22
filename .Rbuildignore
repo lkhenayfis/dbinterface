@@ -4,3 +4,6 @@
 ^README\.Rmd$
 ^codecov\.yml$
 ^\.github$
+^plans$
+^\.implementation-state\.json$
+^code-report\.md$

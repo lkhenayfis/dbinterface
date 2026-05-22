@@ -11,7 +11,7 @@ proc_query_mock_spart(conexao, query)
 proc_query_mock_cpart(conexao, query)
 }
 \arguments{
-\item{conexao}{objeto de conexao ao banco retornado por \code{\link{conectabanco}}}
+\item{conexao}{objeto de conexao ao banco (mock ou morgana)}
 
 \item{query}{lista detalhando a query como retornado por \code{\link{parseargs}}}
 }

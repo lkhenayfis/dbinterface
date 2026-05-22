@@ -1,13 +1,14 @@
 Package: dbinterface
-Title: Backend Para Acesso A Bancos De Dados `mock` E Relacionais
-Version: 0.9.0.9000
+Title: Backend Para Acesso A Bancos Mock e Morgana
+Version: 0.10.0.9000
 Authors@R: 
     person("Lucas", "Khenayfis", , "lucaskhenayfis@gmail.com", role = c("aut", "cre"))
-Description: Este pacote fornece funcionalidade backend para interface com bancos `mock`
-    localizados em um diretorio local ou em um bucket S3, alem de bancos relacionais tradicionais.
-    A versao atual suporta particionamento de dados, porem apenas operacoes de leitura
-    estao implementadas. Criacao de novas tabelas e escrita nas existentes
-    serao adicionadas em versoes futuras.
+Description: Backend para interface com bancos `mock` (em diretorios locais
+    ou buckets S3) e bancos `morgana` (S3 acessados via API). O acesso ao
+    morgana esta temporariamente desabilitado enquanto a API permanece
+    offline; o conector continua exportado mas levanta erro ao ser chamado.
+    A versao atual suporta particionamento de dados, porem apenas operacoes
+    de leitura estao implementadas.
 License: MIT + file LICENSE
 Depends:
     R (>= 4.0)
@@ -17,9 +18,7 @@ Imports:
     jsonlite (>= 1.7),
     xfun (>= 0.39),
     cli (>= 3.6)
-Suggests: 
-    DBI (>= 1.0),
-    RPostgreSQL (>= 0.7),
+Suggests:
     testthat (>= 3.0.0),
     arrow (>= 11.0.0),
     aws.s3 (>= 0.3),
@@ -27,4 +26,4 @@ Suggests:
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
