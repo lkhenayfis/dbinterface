@@ -70,6 +70,7 @@ test_that("Leitura de dados mock -- Local", {
 
 test_that("Leitura de dados mock -- S3", {
 
+    skip_if(!nzchar(Sys.getenv("AWS_ACCESS_KEY_ID")), "AWS credentials not set")
     # existe um problema de timeout ainda nao controlado nas conexoes com a aws, ainda mais em
     # casos de bancos muito grandes
     # para evitar isso aqui, e agilizar o teste, e feita uma simplificacao

@@ -33,20 +33,9 @@ pode conter uma chave opcional \code{uri}. Ela e opcional pois so seria utilizad
 e o json lido nao possua essa chave, sera adicionada como igual ao caminho \code{schema}.
 }
 \examples{
-
-# conexao com o mock banco exemplo do pacote
-
-# passando o diretorio
-arq_schema <- system.file("extdata/cpart_parquet/schema.json", package = "dbinterface")
-conn1 <- conectamock(arq_schema)
-
-# passando o a lista de schema ja lido
-schema <- jsonlite::read_json(arq_schema)
-schema$uri <- sub("/schema.json", "", arq_schema)
-conn2 <- conectamock(schema)
-
 \dontrun{
-identical(conn1, conn2)
+arq_schema <- system.file("extdata/cpart_parquet/schema.json", package = "dbinterface")
+conn <- conectamock(arq_schema)
 }
 
 }

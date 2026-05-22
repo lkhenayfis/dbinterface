@@ -31,6 +31,7 @@ test_that("Leitura de banco mock", {
 })
 
 test_that("Leitura de banco S3 padrao", {
+    skip_if(!nzchar(Sys.getenv("AWS_ACCESS_KEY_ID")), "AWS credentials not set")
     arq <- "s3://ons-pem-historico/hidro/rodadas-smap/sintetico/schema.json"
     conn <- conectamock(arq)
 
@@ -42,24 +43,9 @@ test_that("Leitura de banco S3 padrao", {
     expect_snapshot_value(dat2, style = "serialize")
 })
 
-test_that("Leitura de banco via morgana", {
-
-    skip("morgana em manutencao")
-
+test_that("conectamorgana e bloqueado enquanto a API esta offline", {
     arq <- "s3://ons-pem-historico/hidro/rodadas-smap/sintetico/schema.json"
-    conn <- conectamorgana(arq)
-
-    dat1 <- getfromdb(conn, "subbacias", codigo = "AVERMELHA")
-    expect_snapshot_value(dat1, style = "serialize")
-
-    # a query via morgana retorna um erro de que nao existe a coluna 'codigo' na tabela
-    # 'precipitacao_observada', embora exista e a mesma query, realizada pelo conector mock padrao
-    # funcione adequadamente
-    expect_error({
-        dat2 <- getfromdb(conn, "precipitacao_observada", codigo = "AVERMELHA",
-            data_previsao = "2020-01-01")
-        expect_snapshot_value(dat2, style = "serialize")
-    })
+    expect_error(conectamorgana(arq), "morgana atualmente indisponivel")
 })
 
 options(warn = w)

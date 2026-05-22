@@ -17,6 +17,7 @@ test_that("Testa conexao mock -- Local", {
 
 test_that("Testa conexao mock -- S3", {
 
+    skip_if(!nzchar(Sys.getenv("AWS_ACCESS_KEY_ID")), "AWS credentials not set")
     arq  <- "s3://ons-pem-historico/hidro/rodadas-smap/sintetico/schema.json"
     conn <- conectamock(arq)
     expect_true(inherits(conn, "mock"))
@@ -31,19 +32,7 @@ test_that("Testa conexao mock -- S3", {
     expect_identical(conn, conn3)
 })
 
-test_that("Testa conexao mock -- morgana-client", {
-
-    arq  <- "s3://ons-pem-historico/hidro/rodadas-smap/sintetico/schema.json"
-    conn <- conectamorgana(arq)
-    expect_true(inherits(conn, c("morgana", "mock")))
-    expect_equal(attr(conn, "uri"), sub("/schema.json", "", arq))
-    expect_equal(attr(conn, "x_api_key"), Sys.getenv("X_API_KEY"))
-
-    arq2 <- "s3://ons-pem-historico/hidro/rodadas-smap/sintetico"
-    conn2 <- conectamorgana(arq2)
-    expect_identical(conn, conn2)
-
-    schema <- compoe_schema(arq)
-    conn3 <- conectamorgana(schema)
-    expect_identical(conn, conn3)
+test_that("conectamorgana e bloqueado enquanto a API esta offline", {
+    arq <- "s3://ons-pem-historico/hidro/rodadas-smap/sintetico/schema.json"
+    expect_error(conectamorgana(arq), "morgana atualmente indisponivel")
 })

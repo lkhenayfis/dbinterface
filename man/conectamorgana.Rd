@@ -30,3 +30,15 @@ modo que informacoes pessoais e sensiveis nao ficam expostas hardcoded.
 O objeto de saida e, para todos os efeitos, identico a uma conexao mock com o s3. Possui apenas
 um atributo adicional que e a chave de api passada originalmente
 }
+\note{
+O servico morgana esta atualmente offline. Chamar \code{conectamorgana()} ira sempre
+levantar um erro. O corpo da funcao abaixo da chamada a \code{stop()} foi preservado
+verbatim para permitir reativacao com uma unica edicao quando a API morgana
+retornar -- veja a secao 3 da especificacao para o playbook de reanimacao.
+}
+\examples{
+\dontrun{
+conn <- conectamorgana("caminho/para/schema.json")
+}
+
+}

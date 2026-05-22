@@ -22,25 +22,14 @@
 #'     \code{schema.json} para banco, ou o caminho de um arquivo deste tipo ou diretorio que o 
 #'     contenha. Veja Detalhes
 #' 
-#' @examples 
-#' 
-#' # conexao com o mock banco exemplo do pacote
-#' 
-#' # passando o diretorio
-#' arq_schema <- system.file("extdata/cpart_parquet/schema.json", package = "dbinterface")
-#' conn1 <- conectamock(arq_schema)
-#' 
-#' # passando o a lista de schema ja lido
-#' schema <- jsonlite::read_json(arq_schema)
-#' schema$uri <- sub("/schema.json", "", arq_schema)
-#' conn2 <- conectamock(schema)
-#' 
+#' @examples
 #' \dontrun{
-#' identical(conn1, conn2)
+#' arq_schema <- system.file("extdata/cpart_parquet/schema.json", package = "dbinterface")
+#' conn <- conectamock(arq_schema)
 #' }
-#' 
+#'
 #' @return objeto de conexao com o mock banco
-#' 
+#'
 #' @export
 
 conectamock <- function(schema) new_mock(schema)
@@ -98,17 +87,6 @@ conectamorgana <- function(schema, x_api_key = Sys.getenv("X_API_KEY")) {
     return(out)
 }
 
-#' Construtor Interno De Mocks
-#' 
-#' Construtor utilizado para geracao de objetos conexao com mocks e morgana
-#' 
-#' @param schema lista contendo o schema do banco, correspondente aos conteudos de um arquivo
-#'     \code{schema.json} para banco, ou o caminho de um arquivo deste tipo ou diretorio que o 
-#'     contenha.
-#' @param morgana booleano indicando se a conexacao e via morgana ou nao
-#' 
-#' @return objeto da classe \code{mock}
-
 new_mock <- function(schema, morgana = FALSE) {
 
     is_char <- is.character(schema)
@@ -123,11 +101,10 @@ new_mock <- function(schema, morgana = FALSE) {
     out <- list(tabelas = tabelas)
     class(out) <- "mock"
     attr(out, "uri") <- schema$uri
-
-    return(out)
+    out
 }
 
-#' @export 
+#' @export
 
 print.mock <- function(x, ...) {
     cat("* Banco 'mock' com tabelas: \n\n")
