@@ -15,3 +15,8 @@ string com a query completa
 \description{
 Auxiliar para transformar a lista de query por trecho numa unica string
 }
+\note{
+Apos a refatoracao spec drop-sql (§9.3), \code{collate_query} e usado somente
+pelo caminho (congelado) \code{\link[=roda_query]{roda_query.morgana}}. A query estruturada
+emitida por \code{\link{parseargs}} nao e mais consumivel por esta funcao.
+}

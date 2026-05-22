@@ -7,34 +7,25 @@
 #' @param tabela objeto da classe \code{tabela} criado por \code{\link{new_tabela}}
 #' @param campos os campos a reter apos a leitura. Por padrao traz todos
 #' @param ... subsets a serem aplicados. Veja Detalhes e Exemplos
-#' @param is_mock booleano indicando se o parse de argumentos esta sendo feito para query num banco
-#'     mock ou relacional
-#' 
+#'
 #' @return lista contendo os trechos de query para executar no banco
 #' 
 #' @seealso generica para parse de cada campo individualmente \code{\link{parsearg}}; 
 
-parseargs <- function(tabela, campos = NA, ..., is_mock = TRUE) {
+parseargs <- function(tabela, campos = NA, ...) {
 
     if ((campos[1] == "*") || is.na(campos[1])) campos <- names(tabela$campos)
 
     subsets <- list(...)
-    if (length(subsets) == 0) {
-        WHERE <- NULL
-    } else {
-        WHERE  <- lapply(names(subsets), function(campo) {
-            parsearg(tabela$campos[[campo]], subsets[[campo]], is_mock = is_mock)
-        })
-        names(WHERE) <- sapply(names(subsets), function(campo) tabela$campos[[campo]]$nome)
-        WHERE <- WHERE[!sapply(WHERE, is.null)]
-    }
+    if (length(subsets) == 0) return(list(SELECT = campos, FROM = tabela$nome, WHERE = NULL))
 
-    SELECT <- paste0(campos, collapse = ",")
-    FROM   <- tabela$nome
+    WHERE  <- lapply(names(subsets), function(campo) {
+        parsearg(tabela$campos[[campo]], subsets[[campo]])
+    })
+    names(WHERE) <- vapply(names(subsets), function(campo) tabela$campos[[campo]]$nome, character(1L))
+    WHERE <- WHERE[!vapply(WHERE, is.null, logical(1L))]
 
-    out <- list(SELECT = SELECT, FROM = FROM, WHERE = WHERE)
-
-    return(out)
+    list(SELECT = campos, FROM = tabela$nome, WHERE = WHERE)
 }
 
 # PARSES UNITARIOS ---------------------------------------------------------------------------------
@@ -53,12 +44,10 @@ parseargs <- function(tabela, campos = NA, ..., is_mock = TRUE) {
 #' 
 #' @param campo objeto da classe \code{campo} gerado por \code{\link{new_campo}}
 #' @param valor o valor buscado na tabela para montar a query
-#' @param is_mock booleano indicando se o parse de argumentos esta sendo feito para query num banco
-#'     mock ou relacional
 #' @param ... demais argumentos que possam existir nos metodos de cada tipo de dado
-#' 
+#'
 #' @examples
-#' 
+#'
 #' tab <- dbinterface:::new_tabela(
 #'     nome = "vazoes",
 #'     campos = list(
@@ -69,38 +58,37 @@ parseargs <- function(tabela, campos = NA, ..., is_mock = TRUE) {
 #'     uri = system.file("extdata/cpart_parquet/vazoes/", package = "dbinterface"),
 #'     tipo_arquivo = ".parquet.gzip"
 #' )
-#' 
+#'
 #' parsed_codigo <- parsearg(tab$campos$codigo, 1:3)
 #' \dontrun{
-#' print(parsed_codigo[1])
-#' #> "codigo IN (1,2,3)"
+#' print(parsed_codigo)
+#' #> codigo == "1" | codigo == "2" | codigo == "3"
 #' }
-#' 
+#'
 #' parsed_data <- parsearg(tab$campos$data, "2020/2021")
 #' \dontrun{
-#' print(parsed_data[1])
-#' #> "data >= '2020-01-01 00:00:00' AND data < '2022-01-01 00:00:00'"
+#' print(parsed_data)
+#' #> (data >= as.POSIXct("2020-01-01 00:00:00")) & (data < as.POSIXct("2022-01-01 00:00:00"))
 #' }
-#' 
-#' 
-#' @return string contendo o trecho de WHERE relacionado ao campo em questao
+#'
+#'
+#' @return expressao do tipo language contendo o trecho de WHERE relacionado ao campo em questao
 #' 
 #' @export
 
-parsearg <- function(campo, valor, is_mock = TRUE, ...) UseMethod("parsearg")
+parsearg <- function(campo, valor, ...) UseMethod("parsearg")
 
 #' @export 
 
-parsearg.NULL <- function(campo, valor, is_mock = TRUE, ...) return(NULL)
+parsearg.NULL <- function(campo, valor, ...) return(NULL)
 
 #' @export
 
-parsearg.campo_int <- function(campo, valor, is_mock = TRUE, ...) {
+parsearg.campo_int <- function(campo, valor, ...) {
     if (is.na(valor[1]) || valor[1] == "*") return(structure(NA, "n" = 0))
 
-    valor_str <- paste0(valor, collapse = ",")
-    WHERE     <- paste0(campo$nome, " IN (", valor_str, ")")
-    if (is_mock) WHERE <- str2mock(WHERE)
+    partes <- paste0(campo$nome, " == ", valor)
+    WHERE  <- str2lang(paste0(partes, collapse = " | "))
 
     attr(WHERE, "valor") <- valor
     attr(WHERE, "n") <- length(valor)
@@ -110,12 +98,11 @@ parsearg.campo_int <- function(campo, valor, is_mock = TRUE, ...) {
 
 #' @export
 
-parsearg.campo_string <- function(campo, valor, is_mock = TRUE, ...) {
+parsearg.campo_string <- function(campo, valor, ...) {
     if (is.na(valor[1]) || valor[1] == "*") return(structure(NA, "n" = 0))
 
-    valor_str <- paste0(valor, collapse = "','")
-    WHERE <- paste0(campo$nome, " IN ('", valor_str, "')")
-    if (is_mock) WHERE <- str2mock(WHERE)
+    partes <- paste0(campo$nome, " == '", valor, "'")
+    WHERE  <- str2lang(paste0(partes, collapse = " | "))
 
     attr(WHERE, "valor") <- valor
     attr(WHERE, "n") <- length(valor)
@@ -125,25 +112,18 @@ parsearg.campo_string <- function(campo, valor, is_mock = TRUE, ...) {
 
 #' @export
 
-# implementacao provisoria
-# ainda falta fazer os possiveis subsets por lista ou faixa
-parsearg.campo_float <- function(campo, valor, is_mock = TRUE, ...) parsearg.campo_int(campo, valor, is_mock, ...)
+parsearg.campo_float <- function(campo, valor, ...) parsearg.campo_int(campo, valor, ...)
 
 #' @export
 
-parsearg.campo_datetime <- function(campo, valor, is_mock = TRUE, ...) {
-
-    nome <- campo$nome
-
+parsearg.campo_datetime <- function(campo, valor, ...) {
     if ((valor[1] == "*") || is.na(valor[1])) valor <- "1000/3999"
-    WHERE <- parsedatas(valor, nome, is_mock = is_mock)
-
-    return(WHERE)
+    parsedatas(valor, campo$nome)
 }
 
 #' @export
 
-parsearg.campo_date <- function(campo, valor, is_mock = TRUE, ...) parsearg.campo_datetime(campo, valor, is_mock)
+parsearg.campo_date <- function(campo, valor, ...) parsearg.campo_datetime(campo, valor, ...)
 
 # HELPERS ------------------------------------------------------------------------------------------
 
@@ -161,25 +141,30 @@ parsearg.campo_date <- function(campo, valor, is_mock = TRUE, ...) parsearg.camp
 #' @param datahoras uma string indicando faixa de tempo no padrao do pacote \code{xts}
 #' @param nome nome do campo para query
 #' @param query booleano indicando se deve ser retornada a query ou apenas a expansao das datas
-#' @param is_mock booleano indicando se o parse de argumentos esta sendo feito para query num banco
-#'     mock ou relacional
-#' 
-#' @examples 
-#' 
+#'
+#' @examples
+#'
 #' \dontrun{
 #' cond <- parsedatas("2021", "data_hora")
-#' identical(cond, "data_hora >= '2021-01-01 00:00:00' AND data_hora < '2022-01-01 00:00:00'")
+#' expected <- paste0(
+#'     "(data_hora >= as.POSIXct('2021-01-01 00:00:00'))",
+#'     " & (data_hora < as.POSIXct('2022-01-01 00:00:00'))"
+#' )
+#' identical(cond, str2lang(expected))
 #' }
-#' 
+#'
 #' \dontrun{
 #' cond <- parsedatas("2020-11-30 12:30", "data_hora")
-#' identical(cond, "data_hora >= '2020-11-30 12:30:00' AND data_hora < '2020-11-30 12:30:01'")
+#' expected <- paste0(
+#'     "(data_hora >= as.POSIXct('2020-11-30 12:30:00'))",
+#'     " & (data_hora < as.POSIXct('2020-11-30 12:30:01'))"
+#' )
+#' identical(cond, str2lang(expected))
 #' }
-#' 
-#' @return se \code{query = TRUE} string contendo a condicao de busca associada a datas na query, do
-#'    contrario retorna apenas as datas expandidas
+#'
+#' @return se \code{query = TRUE} expressao do tipo language com a condicao de busca associada a datas, do contrario retorna apenas as datas expandidas
 
-parsedatas <- function(datahoras, nome, query = TRUE, is_mock = TRUE) {
+parsedatas <- function(datahoras, nome, query = TRUE) {
 
     if (!grepl("/", datahoras)) datahoras <- paste0(rep(datahoras, 2), collapse = "/")
     if (grepl("^/", datahoras)) datahoras <- paste0("1000-01-01 00:00:00", datahoras)
@@ -192,13 +177,9 @@ parsedatas <- function(datahoras, nome, query = TRUE, is_mock = TRUE) {
 
     datahoras  <- sapply(1:2, function(i) datahoras[[i]][i])
 
-    if (!is_mock) {
-        querydatas <- paste0(nome, " >= '", datahoras[1], "' AND ", nome, " < '", datahoras[2], "'")
-    } else {
-        partes <- paste0("as.POSIXct('", datahoras, "')")
-        querydatas <- paste0("(", nome, " >= ", partes[1], ") & (", nome, " < ", partes[2], ")")
-        querydatas <- str2lang(querydatas)
-    }
+    partes <- paste0("as.POSIXct('", datahoras, "')")
+    querydatas <- paste0("(", nome, " >= ", partes[1], ") & (", nome, " < ", partes[2], ")")
+    querydatas <- str2lang(querydatas)
 
     return(querydatas)
 }
@@ -256,7 +237,6 @@ expandedatahora <- function(datahora) {
         return(out)
     }
 
-    # caso nao seja de horario completo, comeca as possiveis formas de expansao
     vetor_data <- strsplit(datahora[1], "-")[[1]]
     tem_anomesdia <- length(vetor_data) == 3
     tem_anomes    <- length(vetor_data) == 2
@@ -274,29 +254,4 @@ expandedatahora <- function(datahora) {
     }
 
     return(out)
-}
-
-#' Converte String De WHERE Para Expressao
-#' 
-#' Transforma uma string de WHERE para expressao de subset coerente com `data.table`s
-#' 
-#' @param str string de subset gerada por uma das funcoes de parse de argumentos
-#' 
-#' @return expressao do subset a ser avaliado
-
-str2mock <- function(str) {
-
-    str <- strsplit(str, " IN ")[[1]]
-
-    var <- str[[1]]
-
-    whats <- gsub("\\(", "", str[[2]])
-    whats <- gsub("\\)", "", whats)
-    whats <- strsplit(whats, ",")[[1]]
-
-    exprs <- lapply(whats, function(w) paste0(var, "==", w))
-    exprs <- paste0(exprs, collapse = " | ")
-    exprs <- str2lang(exprs)
-
-    return(exprs)
 }

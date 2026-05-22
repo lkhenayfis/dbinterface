@@ -4,7 +4,7 @@
 \alias{parsedatas}
 \title{Parse De Tipo Data(Hora)}
 \usage{
-parsedatas(datahoras, nome, query = TRUE, is_mock = TRUE)
+parsedatas(datahoras, nome, query = TRUE)
 }
 \arguments{
 \item{datahoras}{uma string indicando faixa de tempo no padrao do pacote \code{xts}}
@@ -12,13 +12,9 @@ parsedatas(datahoras, nome, query = TRUE, is_mock = TRUE)
 \item{nome}{nome do campo para query}
 
 \item{query}{booleano indicando se deve ser retornada a query ou apenas a expansao das datas}
-
-\item{is_mock}{booleano indicando se o parse de argumentos esta sendo feito para query num banco
-mock ou relacional}
 }
 \value{
-se \code{query = TRUE} string contendo a condicao de busca associada a datas na query, do
-contrario retorna apenas as datas expandidas
+se \code{query = TRUE} expressao do tipo language com a condicao de busca associada a datas, do contrario retorna apenas as datas expandidas
 }
 \description{
 Transforma \code{datahoras} passado as funcoes \code{get*} numa string de query
@@ -35,12 +31,20 @@ os padroes de janela podem ser representados da mesma forma, simplificando a fun
 
 \dontrun{
 cond <- parsedatas("2021", "data_hora")
-identical(cond, "data_hora >= '2021-01-01 00:00:00' AND data_hora < '2022-01-01 00:00:00'")
+expected <- paste0(
+    "(data_hora >= as.POSIXct('2021-01-01 00:00:00'))",
+    " & (data_hora < as.POSIXct('2022-01-01 00:00:00'))"
+)
+identical(cond, str2lang(expected))
 }
 
 \dontrun{
 cond <- parsedatas("2020-11-30 12:30", "data_hora")
-identical(cond, "data_hora >= '2020-11-30 12:30:00' AND data_hora < '2020-11-30 12:30:01'")
+expected <- paste0(
+    "(data_hora >= as.POSIXct('2020-11-30 12:30:00'))",
+    " & (data_hora < as.POSIXct('2020-11-30 12:30:01'))"
+)
+identical(cond, str2lang(expected))
 }
 
 }

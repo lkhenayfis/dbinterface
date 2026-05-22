@@ -15,3 +15,7 @@ decode_output(x)
 \description{
 Converte resposta de uma consulta a api para dado padronizado
 }
+\note{
+Apos a refatoracao spec drop-sql (§9.3), \code{decode_output} e usado somente
+pelo caminho (congelado) \code{\link[=roda_query]{roda_query.morgana}}.
+}

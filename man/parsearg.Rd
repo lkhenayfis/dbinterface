@@ -4,20 +4,17 @@
 \alias{parsearg}
 \title{Generica Para Parse De Argumentos Unicos}
 \usage{
-parsearg(campo, valor, is_mock = TRUE, ...)
+parsearg(campo, valor, ...)
 }
 \arguments{
 \item{campo}{objeto da classe \code{campo} gerado por \code{\link{new_campo}}}
 
 \item{valor}{o valor buscado na tabela para montar a query}
 
-\item{is_mock}{booleano indicando se o parse de argumentos esta sendo feito para query num banco
-mock ou relacional}
-
 \item{...}{demais argumentos que possam existir nos metodos de cada tipo de dado}
 }
 \value{
-string contendo o trecho de WHERE relacionado ao campo em questao
+expressao do tipo language contendo o trecho de WHERE relacionado ao campo em questao
 }
 \description{
 Funcao generica dos metodos de parse de argmumentos passados nas queries de tabela
@@ -46,14 +43,14 @@ tab <- dbinterface:::new_tabela(
 
 parsed_codigo <- parsearg(tab$campos$codigo, 1:3)
 \dontrun{
-print(parsed_codigo[1])
-#> "codigo IN (1,2,3)"
+print(parsed_codigo)
+#> codigo == "1" | codigo == "2" | codigo == "3"
 }
 
 parsed_data <- parsearg(tab$campos$data, "2020/2021")
 \dontrun{
-print(parsed_data[1])
-#> "data >= '2020-01-01 00:00:00' AND data < '2022-01-01 00:00:00'"
+print(parsed_data)
+#> (data >= as.POSIXct("2020-01-01 00:00:00")) & (data < as.POSIXct("2022-01-01 00:00:00"))
 }
 
 

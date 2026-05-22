@@ -26,3 +26,10 @@ Para contornar o problema se torna necessario fazer uma maracutaia de trocar o t
 da query e retorna-lo ao valor original depois. Ao retornar o valor, o R desloca as datas, entao
 e preciso modificar o atributo tzone da coluna de datas de volta para GMT
 }
+\note{
+O metodo \code{roda_query.morgana} esta preservado para reativacao quando o
+servico morgana retornar, mas atualmente nao e alcancavel pois
+\code{\link{conectamorgana}} levanta erro. Adicionalmente, apos a refatoracao
+spec drop-sql (§9.3), a query passada para \code{roda_query.morgana} nao
+corresponde mais ao formato SQL string esperado por \code{\link{collate_query}}.
+}

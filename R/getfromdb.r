@@ -54,8 +54,7 @@
 
 getfromdb <- function(conexao, tabela, campos = NA, ...) {
 
-    is_mock <- inherits(conexao, "mock")
-    query <- parseargs(conexao$tabelas[[tabela]], campos, is_mock = is_mock, ...)
+    query <- parseargs(conexao$tabelas[[tabela]], campos, ...)
     out   <- roda_query(conexao, query)
 
     return(out)
@@ -75,6 +74,12 @@ getfromdb <- function(conexao, tabela, campos = NA, ...) {
 #' 
 #' @param conexao objeto de conexao ao banco (mock ou morgana)
 #' @param query lista detalhando a query como retornado por \code{\link{parseargs}}
+#'
+#' @note O metodo \code{roda_query.morgana} esta preservado para reativacao quando o
+#'     servico morgana retornar, mas atualmente nao e alcancavel pois
+#'     \code{\link{conectamorgana}} levanta erro. Adicionalmente, apos a refatoracao
+#'     spec drop-sql (§9.3), a query passada para \code{roda_query.morgana} nao
+#'     corresponde mais ao formato SQL string esperado por \code{\link{collate_query}}.
 #'
 #' @return dado recuperado do banco ou erro caso a query nao possa ser realizada
 
@@ -152,7 +157,10 @@ corrigeposix <- function(dat) {
 #' Converte resposta de uma consulta a api para dado padronizado
 #' 
 #' @param x vetor de informarcao codificada em base64
-#' 
+#'
+#' @note Apos a refatoracao spec drop-sql (§9.3), \code{decode_output} e usado somente
+#'     pelo caminho (congelado) \code{\link[=roda_query]{roda_query.morgana}}.
+#'
 #' @return \code{data.table} convertido
 
 decode_output <- function(x) {
@@ -164,7 +172,11 @@ decode_output <- function(x) {
 #' Auxiliar para transformar a lista de query por trecho numa unica string
 #' 
 #' @param query lista de trechos SELECT, FROM e WHERE como retornado por \code{\link{parseargs}}
-#' 
+#'
+#' @note Apos a refatoracao spec drop-sql (§9.3), \code{collate_query} e usado somente
+#'     pelo caminho (congelado) \code{\link[=roda_query]{roda_query.morgana}}. A query estruturada
+#'     emitida por \code{\link{parseargs}} nao e mais consumivel por esta funcao.
+#'
 #' @return string com a query completa
 
 collate_query <- function(query) {
