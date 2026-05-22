@@ -63,12 +63,27 @@ conectamock <- function(schema) new_mock(schema)
 #'     \code{schema.json} para banco, ou o caminho de um arquivo deste tipo ou diretorio que o 
 #'     contenha. Veja \code{\link{conectamock}}
 #' @param x_api_key chave de api para uso das funcoes que compoem o morgana na aws. Veja Detalhes
-#' 
+#'
 #' @return objeto de conexao com o mock banco via morgana
+#'
+#' @note
+#'
+#' O servico morgana esta atualmente offline. Chamar `conectamorgana()` ira sempre
+#' levantar um erro. O corpo da funcao abaixo da chamada a `stop()` foi preservado
+#' verbatim para permitir reativacao com uma unica edicao quando a API morgana
+#' retornar -- veja a secao 3 da especificacao para o playbook de reanimacao.
+#'
+#' @examples
+#' \dontrun{
+#' conn <- conectamorgana("caminho/para/schema.json")
+#' }
 #'
 #' @export
 
 conectamorgana <- function(schema, x_api_key = Sys.getenv("X_API_KEY")) {
+
+    stop("Servico morgana atualmente indisponivel -- API offline")
+    # === codigo abaixo preservado para reativacao quando a API morgana retornar ===
 
     if (!requireNamespace("httr2", quietly = TRUE)) {
         stop("Conexao como cliente do morgana exige pacote 'httr2'")
