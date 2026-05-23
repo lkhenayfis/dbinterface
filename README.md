@@ -13,11 +13,13 @@
 ## Visao geral
 
 Este pacote fornece funcionalidade backend para interface com bancos
-`mock` localizados em um diretorio local ou em um bucket S3, alem de
-bancos relacionais tradicionais. A versao atual suporta particionamento
-de dados, porem apenas operacoes de leitura estao implementadas. Criacao
-de novas tabelas e escrita nas existentes serao adicionadas em versoes
-futuras.
+`mock` localizados em um diretorio local ou em um bucket S3, e com
+bancos `morgana`, que sao bancos no S3 acessados via API. Suporta
+particionamento de dados.
+
+O acesso ao banco `morgana` esta temporariamente desabilitado enquanto a
+API permanece offline; chamar `conectamorgana()` levanta erro. Veja
+`NEWS.md` para o playbook de reativacao.
 
 ## Instalacao
 
@@ -90,60 +92,60 @@ print(dat)
 #>     posto          nome     codigo bacia_smap fator posto_jusante         bacia
 #>     <int>        <char>     <char>     <char> <num>         <int>        <char>
 #>  1:    18 Agua Vermelha  AVERMELHA   GRD_PRNB 1.000            34        Grande
-#>  2:    24    Emborcacao EMBORCACAO   GRD_PRNB 1.000            31     Paranaiba
-#>  3:    33     Sao Simao    SSIMAO2   GRD_PRNB 0.891            34     Paranaiba
+#>  2:   237     B. Bonita    BBONITA  Paranazao 1.000           238         Tiete
+#>  3:    81  Baixo Iguacu    BAIXOIG        SUL 0.204             0        Iguacu
 #>  4:    61      Capivara   CAPIVARA  Paranazao 1.000            62  Paranapanema
-#>  5:    81  Baixo Iguacu    BAIXOIG        SUL 0.204             0        Iguacu
-#>  6:    92           Ita        ITA        SUL 1.000            94       Uruguai
-#>  7:   111    Passo Real  PASSOREAL        SUL 1.000           112          Osul
-#>  8:   156   Tres Marias     TMSMAP         NE 1.000           169 Sao Francisco
-#>  9:   228       Colider    COLIDER      Norte 0.085           229   Teles Pires
-#> 10:   237     B. Bonita    BBONITA  Paranazao 1.000           238         Tiete
-#> 11:   266        Itaipu     ITAIPU  Paranazao 1.000             0        Parana
-#> 12:   270 Serra da Mesa      SMESA      Norte 1.000           191     Tocantins
-#> 13:   275       Tucurui    TUCURUI      Norte 1.000             0     Tocantins
-#> 14:   278         Manso      MANSO        OSE 1.000             0      Paraguai
-#> 15:   285         Jirau     JIRAU2      Norte 1.000           287       Madeira
-#> 16:   288      Pimental  PIMENTALT      Norte 1.000             0         Xingu
-#> 17:   290          Jari STOANTJARI      Norte 1.000             0          Jari
+#>  5:   228       Colider    COLIDER      Norte 0.085           229   Teles Pires
+#>  6:    24    Emborcacao EMBORCACAO   GRD_PRNB 1.000            31     Paranaiba
+#>  7:    92           Ita        ITA        SUL 1.000            94       Uruguai
+#>  8:   266        Itaipu     ITAIPU  Paranazao 1.000             0        Parana
+#>  9:   290          Jari STOANTJARI      Norte 1.000             0          Jari
+#> 10:   285         Jirau     JIRAU2      Norte 1.000           287       Madeira
+#> 11:   278         Manso      MANSO        OSE 1.000             0      Paraguai
+#> 12:   111    Passo Real  PASSOREAL        SUL 1.000           112          Osul
+#> 13:   288      Pimental  PIMENTALT      Norte 1.000             0         Xingu
+#> 14:    33     Sao Simao    SSIMAO2   GRD_PRNB 0.891            34     Paranaiba
+#> 15:   270 Serra da Mesa      SMESA      Norte 1.000           191     Tocantins
+#> 16:   156   Tres Marias     TMSMAP         NE 1.000           169 Sao Francisco
+#> 17:   275       Tucurui    TUCURUI      Norte 1.000             0     Tocantins
 #>     posto_jusante_gvp_art posto_gvp_artificial     tv     n    c1    c2    c3
 #>                     <int>                <int>  <num> <int> <num> <num> <num>
 #>  1:                    34                   18  18.00     0     0     0     0
-#>  2:                    31                   24  17.00     0     0     0     0
-#>  3:                    34                   33  30.00     0     0     0     0
+#>  2:                    38                   37  12.00     0     0     0     0
+#>  3:                     0                   81   0.00     0     0     0     0
 #>  4:                    62                   61   9.30     0     0     0     0
-#>  5:                     0                   81   0.00     0     0     0     0
-#>  6:                    94                   92  20.93     0     0     0     0
-#>  7:                   112                  111   1.30     0     0     0     0
-#>  8:                   169                  156 360.00     0     0     0     0
-#>  9:                   229                  228 132.00     0     0     0     0
-#> 10:                    38                   37  12.00     0     0     0     0
-#> 11:                     0                   66   0.00     0     0     0     0
-#> 12:                   191                  270  10.00     0     0     0     0
-#> 13:                     0                  275   0.00     0     0     0     0
-#> 14:                     0                  278   0.00     0     0     0     0
-#> 15:                   287                  285  23.00     0     0     0     0
-#> 16:                     0                  288   0.00     0     0     0     0
-#> 17:                     0                  290   0.00     0     0     0     0
+#>  5:                   229                  228 132.00     0     0     0     0
+#>  6:                    31                   24  17.00     0     0     0     0
+#>  7:                    94                   92  20.93     0     0     0     0
+#>  8:                     0                   66   0.00     0     0     0     0
+#>  9:                     0                  290   0.00     0     0     0     0
+#> 10:                   287                  285  23.00     0     0     0     0
+#> 11:                     0                  278   0.00     0     0     0     0
+#> 12:                   112                  111   1.30     0     0     0     0
+#> 13:                     0                  288   0.00     0     0     0     0
+#> 14:                    34                   33  30.00     0     0     0     0
+#> 15:                   191                  270  10.00     0     0     0     0
+#> 16:                   169                  156 360.00     0     0     0     0
+#> 17:                     0                  275   0.00     0     0     0     0
 #>       latitude longitude
 #>          <num>     <num>
 #>  1: -19.867222 -50.35000
-#>  2: -18.451944 -47.99389
-#>  3: -19.018055 -50.49917
+#>  2: -22.505000 -48.54500
+#>  3: -25.503330 -53.67167
 #>  4: -22.657500 -51.36083
-#>  5: -25.503330 -53.67167
-#>  6: -27.267500 -52.39833
-#>  7: -29.016944 -53.18889
-#>  8: -18.212500 -45.25917
-#>  9: -10.984805 -55.76600
-#> 10: -22.505000 -48.54500
-#> 11: -25.426667 -54.59278
-#> 12: -13.826187 -48.30083
-#> 13:  -3.750806 -49.66750
-#> 14: -14.875085 -55.78838
-#> 15:  -9.266667 -64.65319
-#> 16:  -3.438302 -51.94512
-#> 17:  -0.650000 -52.51667
+#>  5: -10.984805 -55.76600
+#>  6: -18.451944 -47.99389
+#>  7: -27.267500 -52.39833
+#>  8: -25.426667 -54.59278
+#>  9:  -0.650000 -52.51667
+#> 10:  -9.266667 -64.65319
+#> 11: -14.875085 -55.78838
+#> 12: -29.016944 -53.18889
+#> 13:  -3.438302 -51.94512
+#> 14: -19.018055 -50.49917
+#> 15: -13.826187 -48.30083
+#> 16: -18.212500 -45.25917
+#> 17:  -3.750806 -49.66750
 ```
 
 Subsets podem ser especificados no momento da leitura atraves de

@@ -33,9 +33,8 @@ pode conter uma chave opcional \code{uri}. Ela e opcional pois so seria utilizad
 e o json lido nao possua essa chave, sera adicionada como igual ao caminho \code{schema}.
 }
 \examples{
-\dontrun{
+
 arq_schema <- system.file("extdata/cpart_parquet/schema.json", package = "dbinterface")
 conn <- conectamock(arq_schema)
-}
 
 }

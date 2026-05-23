@@ -16,7 +16,7 @@ test_that("Validadores de tipo de arquivo", {
     expect_error(valida_tipo_arquivo("tipo_qualquer"))
 })
 
-test_that("Selecao de reader_fun", {
+test_that("Selecao de reader_func", {
 
     # CSV ----------------------------------------------------------------
 

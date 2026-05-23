@@ -64,13 +64,10 @@ getfromdb <- function(conexao, tabela, campos = NA, ...) {
 #' 
 #' Generica para execucao de queries entre os diferentes tipos de conexao
 #' 
-#' Existe um problema na conversao de datas nas viradas de horario de verao, dando erro na query.
-#' Teoricamente isso pode ser resolvido passando tz = "GMT" para as.POSIXlt, porem o DBI nao da
-#' esse nivel de controle.
-#' 
-#' Para contornar o problema se torna necessario fazer uma maracutaia de trocar o tz do R no momento
-#' da query e retorna-lo ao valor original depois. Ao retornar o valor, o R desloca as datas, entao
-#' e preciso modificar o atributo tzone da coluna de datas de volta para GMT
+#' Para evitar o bug de conversao de \code{as.POSIXct} nas viradas de horario de verao,
+#' a funcao forca temporariamente \code{TZ=GMT} durante a execucao da query e restaura
+#' o valor original ao final. As colunas POSIXct resultantes sao re-tagueadas com
+#' \code{tzone = "GMT"} por \code{corrigeposix} para manter consistencia de fuso.
 #' 
 #' @param conexao objeto de conexao ao banco (mock ou morgana)
 #' @param query lista detalhando a query como retornado por \code{\link{parseargs}}

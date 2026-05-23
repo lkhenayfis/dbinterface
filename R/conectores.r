@@ -23,10 +23,9 @@
 #'     contenha. Veja Detalhes
 #' 
 #' @examples
-#' \dontrun{
+#'
 #' arq_schema <- system.file("extdata/cpart_parquet/schema.json", package = "dbinterface")
 #' conn <- conectamock(arq_schema)
-#' }
 #'
 #' @return objeto de conexao com o mock banco
 #'

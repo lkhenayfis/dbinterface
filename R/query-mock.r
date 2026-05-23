@@ -77,7 +77,7 @@ proc_query_mock_cpart <- function(conexao, query) {
     querymaster <- query[c("SELECT", "FROM", "WHERE")]
     querymaster$SELECT <- "tabela"
     if (length(querymaster$WHERE) > 0) querymaster$WHERE <- querymaster$WHERE[colspart]
-    querymaster$WHERE <- querymaster$WHERE[sapply(querymaster$WHERE, length) > 0]
+    querymaster$WHERE <- querymaster$WHERE[lengths(querymaster$WHERE) > 0]
 
     for (q in querymaster$WHERE) master <- apply_where(master, q)
     master <- dplyr::collect(master)
