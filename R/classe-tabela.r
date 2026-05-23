@@ -112,8 +112,11 @@ schema2tabela <- function(schema, no_master = FALSE) {
 
     campos <- lapply(schema$columns, function(cc) new_campo(cc$name, cc$type))
 
+    particoes <- if (length(schema$partitions) > 0) {
+        vapply(schema$partitions, "[[", "name", FUN.VALUE = character(1L))
+    } else NULL
     new <- new_tabela(schema$name, campos, schema$uri, schema$fileType,
-        vapply(schema$partitions, "[[", "name", FUN.VALUE = character(1L)), schema$description, no_master)
+        particoes, schema$description, no_master)
 }
 
 #' @export
