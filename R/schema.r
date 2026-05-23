@@ -83,7 +83,7 @@ valida_schema_banco <- function(schema) {
     # uri root. Por si so nao e um problema, mas vai ser se as tabelas nao tiverem uris absolutas
     tem_uri_root <- !is.null(schema$uri)
     uri_root_abs <- tem_uri_root && is_abs_path2(schema$uri)
-    tab_uris <- sapply(schema$tables, "[[", "uri")
+    tab_uris <- vapply(schema$tables, "[[", "uri", FUN.VALUE = character(1L))
     tab_uris <- sub("/schema.json$", "", tab_uris)
 
     is_rel_path <- is_rel_path2(tab_uris)
@@ -129,13 +129,13 @@ valida_schema_tabela <- function(schema) {
     # validacoes de colunas ----------------------------------------------
 
     nomes_cols <- lapply(schema$columns, "[[", "name")
-    cols_tem_nome <- sapply(nomes_cols, function(nc) !is.null(nc))
+    cols_tem_nome <- vapply(nomes_cols, function(nc) !is.null(nc), logical(1L))
     if (!all(cols_tem_nome)) stop("Coluna '", nomes_cols[!cols_tem_nome], "' nao tem chave 'name'")
 
-    cols_tipos_ok <- sapply(schema$columns, function(cc) {
+    cols_tipos_ok <- vapply(schema$columns, function(cc) {
         aux <- try(valida_tipo_campo(cc$type), silent = TRUE)
         !inherits(aux, "try-error")
-    })
+    }, logical(1L))
     if (!all(cols_tipos_ok)) stop("Coluna '", nomes_cols[!cols_tipos_ok], "' possui 'typo' nao permitido")
 
     return(schema)

@@ -53,11 +53,8 @@
 #' @export
 
 getfromdb <- function(conexao, tabela, campos = NA, ...) {
-
     query <- parseargs(conexao$tabelas[[tabela]], campos, ...)
-    out   <- roda_query(conexao, query)
-
-    return(out)
+    roda_query(conexao, query)
 }
 
 #' Executa Queries
@@ -104,6 +101,10 @@ roda_query.mock <- function(conexao, query) {
 
 #' @exportS3Method
 roda_query.morgana <- function(conexao, query) {
+    # NOTE: This method is unreachable because conectamorgana() raises an error on line 73.
+    # It is preserved verbatim (with TZ handling) for rapid reactivation when the morgana
+    # API returns online. The query structure passed here no longer matches the format
+    # expected by collate_query() after refactoring (spec drop-sql §9.3).
 
     body <- list(
         database = attr(conexao, "uri"),

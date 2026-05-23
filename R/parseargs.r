@@ -25,7 +25,7 @@ parseargs <- function(tabela, campos = NA, ...) {
     names(WHERE) <- vapply(names(subsets), function(campo) tabela$campos[[campo]]$nome, character(1L))
     WHERE <- WHERE[!vapply(WHERE, is.null, logical(1L))]
 
-    list(SELECT = campos, FROM = tabela$nome, WHERE = WHERE)
+    return(list(SELECT = campos, FROM = tabela$nome, WHERE = WHERE))
 }
 
 # PARSES UNITARIOS ---------------------------------------------------------------------------------
@@ -175,7 +175,7 @@ parsedatas <- function(datahoras, nome, query = TRUE) {
 
     if (!query) return(datahoras)
 
-    datahoras  <- sapply(1:2, function(i) datahoras[[i]][i])
+    datahoras  <- vapply(1:2, function(i) datahoras[[i]][i], character(1L))
 
     partes <- paste0("as.POSIXct('", datahoras, "')")
     querydatas <- paste0("(", nome, " >= ", partes[1], ") & (", nome, " < ", partes[2], ")")

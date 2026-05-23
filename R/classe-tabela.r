@@ -66,7 +66,7 @@ new_tabela <- function(nome, campos, uri, tipo_arquivo, particoes = NULL, descri
 
     if (missing("campos")) stop("Argumento 'campos' vazio")
     if (length(names(campos)) == 0) {
-        names(campos) <- sapply(campos, "[[", "nome")
+        names(campos) <- vapply(campos, "[[", "nome", FUN.VALUE = character(1L))
     }
 
     tabela <- list(nome = nome, campos = campos, particoes = unlist(particoes))
@@ -113,7 +113,7 @@ schema2tabela <- function(schema, no_master = FALSE) {
     campos <- lapply(schema$columns, function(cc) new_campo(cc$name, cc$type))
 
     new <- new_tabela(schema$name, campos, schema$uri, schema$fileType,
-        sapply(schema$partitions, "[[", "name"), schema$description, no_master)
+        vapply(schema$partitions, "[[", "name", FUN.VALUE = character(1L)), schema$description, no_master)
 }
 
 #' @export
@@ -198,7 +198,7 @@ lista_conteudo.tabela_s3 <- function(tabela) {
     bucket <- do.call(file.path, as.list(c(head(splitted, 3), "")))
     prefix <- do.call(file.path, as.list(c(splitted[-seq(3)], "")))
     out <- aws.s3::get_bucket(bucket, prefix)
-    out <- unname(sapply(out, "[[", "Key"))
+    out <- unname(vapply(out, "[[", "Key", FUN.VALUE = character(1L)))
     out <- sub(prefix, "", out)
     return(out)
 }
