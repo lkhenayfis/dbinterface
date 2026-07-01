@@ -1,0 +1,17 @@
+{
+  "application": "teste-rds",
+  "name": "",
+  "description": "",
+  "version": 1,
+  "modifiedTime": "",
+  "tables": [
+    {
+      "name": "elementos",
+      "uri": "./elementos"
+    },
+    {
+      "name": "modelos",
+      "uri": "./modelos"
+    }
+  ]
+}

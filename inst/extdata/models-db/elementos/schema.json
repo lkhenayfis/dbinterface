@@ -1,0 +1,16 @@
+{
+  "name": "elementos",
+  "description": "",
+  "uri": "./elementos",
+  "fileType": ".csv",
+  "columns": [
+    {
+      "name": "nome",
+      "type": "string"
+    },
+    {
+      "name": "codigo",
+      "type": "int"
+    }
+  ]
+}
