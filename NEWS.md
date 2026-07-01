@@ -13,6 +13,8 @@
 - Corrige inconsistencia entre o atributo `reader_fun` esperado em `le_tabela_mock`
   e o atributo `reader_func` produzido por `new_tabela`. O nome canonico passa a
   ser `reader_func` em ambos os lados.
+- Reformula executoras de query para funcionar corretamente quando lidando com arquivos rds que nao
+  contem dados tabulares (ex modelos ajustados)
 
 ## Misc
 

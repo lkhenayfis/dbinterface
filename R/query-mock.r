@@ -41,6 +41,8 @@ le_tabela_mock <- function(tabela, arquivo, ...) {
 #'
 #' @return dado recuperado do banco ou erro caso a query nao possa ser realizada
 #'
+#' @importFrom dplyr collect
+#' 
 #' @name query_local
 
 #' @rdname query_local
@@ -57,11 +59,10 @@ proc_query_mock_spart <- function(conexao, query) {
     )
 
     for (q in query$WHERE) dat <- apply_where(dat, q)
-    dat <- dplyr::collect(dat)
-    setDT(dat)
+    dat <- collect(dat)
+    tryDT(dat)
 
-    cols <- query$SELECT
-    dat <- dat[, .SD, .SDcols = cols]
+    dat <- apply_select(dat, query$SELECT)
 
     return(dat)
 }
@@ -80,9 +81,12 @@ proc_query_mock_cpart <- function(conexao, query) {
     querymaster$WHERE <- querymaster$WHERE[lengths(querymaster$WHERE) > 0]
 
     for (q in querymaster$WHERE) master <- apply_where(master, q)
-    master <- dplyr::collect(master)
+    master <- collect(master)
 
     tabelas <- master$tabela
+
+    drop_where <- !(names(query$WHERE) %in% colspart)
+    query$WHERE <- query$WHERE[drop_where]
 
     dat <- lapply(tabelas, function(tabela) {
         querytabela <- query
@@ -90,13 +94,33 @@ proc_query_mock_cpart <- function(conexao, query) {
 
         proc_query_mock_spart(conexao, querytabela)
     })
-    dat <- rbindlist(dat)
+
+    # quanto se esta lendo arquivos rds contendo objetos genericos, nao tabulares, nao e possivel
+    # fazer rbindlist (e nem faz sentido tentar combinar)
+    # isto existe para o caso de se estarem lendo modelos ajustados
+    # nestes casos, uma lista de modelos volta
+    dat <- tryCatch(rbindlist(dat), error = function(e) dat)
 
     return(dat)
 }
+
+# AUXILIARES ---------------------------------------------------------------------------------------
+
+collect.default <- function(x, ...) x
 
 apply_where <- function(dt, wheres) {
     cc <- list(quote(dplyr::filter), substitute(dt), wheres)
     cc <- as.call(cc)
     eval(cc, parent.frame(), parent.frame())
 }
+
+apply_select <- function(dt, selects) UseMethod("apply_select")
+
+apply_select.default <- function(dt, selects) dt
+apply_select.data.table <- function(dt, selects) {
+    dt[, .SD, .SDcols = selects]
+}
+
+tryDT <- function(x) UseMethod("tryDT")
+tryDT.default <- function(x) x
+tryDT.data.frame <- function(x) as.data.table(x)
