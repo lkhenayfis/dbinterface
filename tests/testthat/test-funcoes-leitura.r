@@ -7,11 +7,13 @@ test_that("Validadores de tipo de arquivo", {
     expect_equal(valida_tipo_arquivo("parquet"), ".parquet")
     expect_equal(valida_tipo_arquivo("parquet.gzip"), ".parquet.gzip")
     expect_equal(valida_tipo_arquivo("json"), ".json")
+    expect_equal(valida_tipo_arquivo("rds"), ".rds")
 
     expect_equal(valida_tipo_arquivo("csv"), valida_tipo_arquivo(".csv"))
     expect_equal(valida_tipo_arquivo("parquet"), valida_tipo_arquivo(".parquet"))
     expect_equal(valida_tipo_arquivo("parquet.gzip"), valida_tipo_arquivo(".parquet.gzip"))
     expect_equal(valida_tipo_arquivo("json"), valida_tipo_arquivo(".json"))
+    expect_equal(valida_tipo_arquivo("rds"), valida_tipo_arquivo(".rds"))
 
     expect_error(valida_tipo_arquivo("tipo_qualquer"))
 })
@@ -73,6 +75,20 @@ test_that("Selecao de reader_func", {
 
     ff <- switch_reader_func("json", TRUE)
     expect_equal(ff, outer_reader_s3(inner_reader_json))
+
+    # RDS ---------------------------------------------------------------
+
+    ff <- switch_reader_func(".rds", FALSE)
+    expect_equal(ff, inner_reader_rds)
+
+    ff <- switch_reader_func("rds", FALSE)
+    expect_equal(ff, inner_reader_rds)
+
+    ff <- switch_reader_func(".rds", TRUE)
+    expect_equal(ff, outer_reader_s3(inner_reader_rds))
+
+    ff <- switch_reader_func("rds", TRUE)
+    expect_equal(ff, outer_reader_s3(inner_reader_rds))
 
     # ERROS --------------------------------------------------------------
 

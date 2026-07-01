@@ -65,6 +65,25 @@ test_that("Leitura de dados mock -- Local", {
 
 })
 
+test_that("Leitura de dados mock -- Local RDS", {
+
+    arq  <- system.file("extdata/models-db/schema.json", package = "dbinterface")
+    conn <- conectamock(arq)
+
+    # checagem de particionamento ----------------------------------------
+
+    expect_true(!checa_particao(conn, list(FROM = "elementos")))
+    expect_true(checa_particao(conn, list(FROM = "modelos")))
+
+    # leitura de tabela com particao -------------------------------------
+
+    read <- getfromdb(conn, "modelos", codigo = 1)
+    expect_true(is.list(read))
+    expect_true(length(read) == 1)
+    expect_true(inherits(read[[1]], "lm"))
+
+})
+
 test_that("Leitura de dados mock -- S3", {
 
     skip_if(!nzchar(Sys.getenv("AWS_ACCESS_KEY_ID")), "AWS credentials not set")
