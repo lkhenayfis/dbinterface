@@ -1,6 +1,6 @@
 Package: dbinterface
 Title: Backend Para Acesso A Bancos Mock e Morgana
-Version: 0.10.0.9000
+Version: 0.10
 Authors@R: 
     person("Lucas", "Khenayfis", , "lucaskhenayfis@gmail.com", role = c("aut", "cre"))
 Description: Backend para interface com bancos `mock` (em diretorios locais
